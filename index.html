@@ -1,0 +1,4424 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>OMA - AI Assistant</title>
+
+
+    <!-- =====================================================
+         BOOTSTRAP
+    ====================================================== -->
+
+    <link
+        href="css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+
+    <!-- =====================================================
+         BOOTSTRAP ICONS
+    ====================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="bootstrap icons/bootstrap-icons.min.css"
+    >
+
+
+    <!-- =====================================================
+         OMA CSS
+    ====================================================== -->
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+
+
+        body {
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: #080d12;
+
+            color: white;
+
+            overflow: hidden;
+        }
+
+
+        /* =================================================
+           APP
+        ================================================= */
+
+        .oma-app {
+            width: 100%;
+            height: 100vh;
+
+            display: flex;
+
+            background: #0c1218;
+        }
+
+
+        /* =================================================
+           SIDEBAR
+        ================================================= */
+
+        .history-sidebar {
+            width: 285px;
+            height: 100vh;
+
+            flex-shrink: 0;
+
+            display: flex;
+            flex-direction: column;
+
+            background: #111820;
+
+            border-right:
+                1px solid #27323d;
+
+            z-index: 2000;
+        }
+
+
+        .sidebar-header {
+            height: 72px;
+
+            padding: 12px 16px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            border-bottom:
+                1px solid #27323d;
+        }
+
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+
+            gap: 10px;
+
+            font-size: 18px;
+        }
+
+
+        .small-logo {
+            width: 40px;
+            height: 40px;
+
+            border-radius: 50%;
+
+            overflow: hidden;
+
+            background: #1d2833;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+
+        .small-logo img {
+            width: 100%;
+            height: 100%;
+
+            object-fit: contain;
+        }
+
+
+        .sidebar-icon-button {
+            width: 35px;
+            height: 35px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: transparent;
+
+            color: #9aa7b3;
+
+            cursor: pointer;
+        }
+
+
+        .sidebar-icon-button:hover {
+            background: #202c36;
+
+            color: white;
+        }
+
+
+        /* =================================================
+           NEW CHAT
+        ================================================= */
+
+        .new-chat-button {
+            margin: 15px;
+
+            padding: 12px;
+
+            border:
+                1px solid #35434f;
+
+            border-radius: 10px;
+
+            background: #1b2732;
+
+            color: white;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            gap: 8px;
+
+            cursor: pointer;
+        }
+
+
+        .new-chat-button:hover {
+            background: #273642;
+        }
+
+
+        /* =================================================
+           SEARCH
+        ================================================= */
+
+        .history-search {
+            margin:
+                0 15px 12px;
+
+            padding:
+                9px 11px;
+
+            display: flex;
+            align-items: center;
+
+            gap: 8px;
+
+            background: #19232c;
+
+            border-radius: 9px;
+
+            color: #73808d;
+        }
+
+
+        .history-search input {
+            width: 100%;
+
+            border: none;
+            outline: none;
+
+            background: transparent;
+
+            color: white;
+        }
+
+
+        .history-search input::placeholder {
+            color: #6e7b87;
+        }
+
+
+        /* =================================================
+           HISTORY
+        ================================================= */
+
+        .history-list {
+            flex: 1;
+
+            overflow-y: auto;
+
+            padding: 0 10px;
+        }
+
+
+        .history-date {
+            padding:
+                10px 7px 5px;
+
+            color: #697682;
+
+            font-size: 11px;
+
+            text-transform: uppercase;
+        }
+
+
+        .history-item {
+            display: flex;
+            align-items: center;
+
+            gap: 9px;
+
+            padding: 10px;
+
+            margin-bottom: 3px;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+
+            color: #c4cdd5;
+        }
+
+
+        .history-item:hover {
+            background: #1d2933;
+        }
+
+
+        .history-item.active {
+            background: #233441;
+        }
+
+
+        .history-item-title {
+            flex: 1;
+
+            overflow: hidden;
+
+            white-space: nowrap;
+
+            text-overflow: ellipsis;
+
+            font-size: 13px;
+        }
+
+
+        .history-actions {
+            display: flex;
+
+            gap: 2px;
+        }
+
+
+        .history-action {
+            border: none;
+
+            background: transparent;
+
+            color: #778592;
+
+            cursor: pointer;
+
+            padding: 4px;
+        }
+
+
+        .history-action:hover {
+            color: white;
+        }
+
+
+        /* =================================================
+           SIDEBAR BOTTOM
+        ================================================= */
+
+        .sidebar-bottom {
+            padding: 10px;
+
+            border-top:
+                1px solid #27323d;
+        }
+
+
+        .sidebar-menu-button {
+            width: 100%;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: transparent;
+
+            color: #adb8c2;
+
+            text-align: left;
+
+            padding: 10px;
+
+            display: flex;
+
+            gap: 10px;
+
+            cursor: pointer;
+        }
+
+
+        .sidebar-menu-button:hover {
+            background: #1d2933;
+
+            color: white;
+        }
+
+
+        /* =================================================
+           MAIN
+        ================================================= */
+
+        .main-area {
+            flex: 1;
+
+            min-width: 0;
+
+            height: 100vh;
+
+            display: flex;
+
+            flex-direction: column;
+        }
+
+
+        /* =================================================
+           HEADER
+        ================================================= */
+
+        .oma-header {
+            height: 75px;
+
+            flex-shrink: 0;
+
+            padding:
+                10px 20px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            background: #111820;
+
+            border-bottom:
+                1px solid #27323d;
+        }
+
+
+        .header-left {
+            display: flex;
+            align-items: center;
+
+            gap: 11px;
+        }
+
+
+        .header-left h1 {
+            margin: 0;
+
+            font-size: 22px;
+        }
+
+
+        .header-left p {
+            margin: 0;
+
+            color: #758391;
+
+            font-size: 11px;
+        }
+
+
+        .oma-logo {
+            width: 48px;
+            height: 48px;
+
+            border-radius: 50%;
+
+            overflow: hidden;
+
+            background: #1b2630;
+
+            border:
+                1px solid #354451;
+        }
+
+
+        .oma-logo img {
+            width: 100%;
+            height: 100%;
+
+            object-fit: contain;
+        }
+
+
+        .header-right {
+            display: flex;
+            align-items: center;
+
+            gap: 12px;
+        }
+
+
+        .connection-status {
+            display: flex;
+            align-items: center;
+
+            gap: 7px;
+
+            color: #85919d;
+
+            font-size: 12px;
+        }
+
+
+        .status-dot {
+            width: 9px;
+            height: 9px;
+
+            border-radius: 50%;
+
+            background: #e04d4d;
+        }
+
+
+        .status-dot.online {
+            background: #38c978;
+        }
+
+
+        .header-button {
+            width: 38px;
+            height: 38px;
+
+            border: none;
+
+            border-radius: 9px;
+
+            background: #1b2630;
+
+            color: white;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            cursor: pointer;
+        }
+
+
+        .header-button:hover {
+            background: #293743;
+        }
+
+
+        /* =================================================
+           CHAT
+        ================================================= */
+
+        .oma-chat {
+            flex: 1;
+
+            min-height: 0;
+
+            overflow-y: auto;
+
+            padding:
+                25px 20px;
+        }
+
+
+        .chat-container {
+            width: 100%;
+
+            max-width: 900px;
+
+            margin: auto;
+        }
+
+
+        /* =================================================
+           WELCOME
+        ================================================= */
+
+        .welcome {
+            text-align: center;
+
+            padding:
+                55px 20px 35px;
+        }
+
+
+        .welcome-logo {
+            display: none;
+        }
+
+
+        .welcome h2 {
+            margin-top: 10px;
+
+            font-size: 30px;
+        }
+
+
+        .welcome p {
+            color: #788591;
+
+            font-size: 14px;
+        }
+
+
+        /* =================================================
+           QUICK ACTIONS
+        ================================================= */
+
+        .quick-actions {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 12px;
+
+            max-width: 650px;
+
+            margin:
+                30px auto;
+        }
+
+
+        .quick-action {
+            padding: 16px 10px;
+
+            border:
+                1px solid #2c3944;
+
+            background: #141d25;
+
+            border-radius: 12px;
+
+            color: #b9c4cd;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+
+        .quick-action:hover {
+            background: #202d38;
+
+            transform:
+                translateY(-2px);
+
+            color: white;
+        }
+
+
+        .quick-action i {
+            display: block;
+
+            font-size: 20px;
+
+            margin-bottom: 7px;
+        }
+
+
+        .quick-action span {
+            font-size: 11px;
+        }
+
+
+        /* =================================================
+           MESSAGES
+        ================================================= */
+
+        .message {
+            display: flex;
+
+            gap: 12px;
+
+            margin-bottom: 24px;
+        }
+
+
+        .message-avatar {
+            width: 38px;
+            height: 38px;
+
+            min-width: 38px;
+
+            border-radius: 50%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #202c37;
+
+            font-weight: bold;
+        }
+
+
+        .message-body {
+            max-width: 78%;
+        }
+
+
+        .message-name {
+            display: block;
+
+            color: #84919d;
+
+            font-size: 11px;
+
+            margin-bottom: 5px;
+        }
+
+
+        .message-text {
+            background: #19232d;
+
+            padding:
+                12px 15px;
+
+            border-radius: 13px;
+
+            line-height: 1.55;
+
+            white-space: pre-wrap;
+        }
+
+
+        .user-message {
+            justify-content: flex-end;
+        }
+
+
+        .user-message .message-body {
+            order: 1;
+        }
+
+
+        .user-message .message-avatar {
+            order: 2;
+
+            background: #28628f;
+        }
+
+
+        .user-message .message-text {
+            background: #24577f;
+        }
+
+
+        .uploaded-image {
+            display: block;
+
+            max-width: 280px;
+            max-height: 280px;
+
+            border-radius: 12px;
+
+            margin-top: 8px;
+        }
+
+
+        /* =================================================
+           INPUT
+        ================================================= */
+
+        .oma-input-section {
+            flex-shrink: 0;
+
+            padding:
+                10px 20px 14px;
+
+            background: #111820;
+
+            border-top:
+                1px solid #27323d;
+        }
+
+
+        .input-container {
+            width: 100%;
+
+            max-width: 900px;
+
+            margin: auto;
+        }
+
+
+        .oma-input-box {
+            display: flex;
+
+            align-items: flex-end;
+
+            gap: 7px;
+
+            padding: 8px;
+
+            background: #19232c;
+
+            border:
+                1px solid #35424e;
+
+            border-radius: 15px;
+        }
+
+
+        .oma-textarea {
+            flex: 1;
+
+            resize: none;
+
+            min-height: 42px;
+            max-height: 130px;
+
+            padding: 10px;
+
+            border: none;
+            outline: none;
+
+            background: transparent;
+
+            color: white;
+
+            font-size: 15px;
+        }
+
+
+        .oma-textarea::placeholder {
+            color: #73808d;
+        }
+
+
+        .input-button {
+            width: 42px;
+            height: 42px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            cursor: pointer;
+
+            font-size: 17px;
+        }
+
+
+        .mic-button {
+            background: transparent;
+
+            color: #d6dde3;
+        }
+
+
+        .mic-button:hover {
+            background: #27333e;
+        }
+
+
+        .send-button {
+            background: #347fbd;
+
+            color: white;
+        }
+
+
+        .send-button:hover {
+            background: #438dca;
+        }
+
+
+        /* =================================================
+           ATTACHMENT
+        ================================================= */
+
+        .attachment-bar {
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            margin-top: 7px;
+        }
+
+
+        .attachment-button {
+            padding:
+                6px 10px;
+
+            border-radius: 8px;
+
+            background: #1b2630;
+
+            color: #a8b4bf;
+
+            font-size: 11px;
+
+            cursor: pointer;
+        }
+
+
+        .attachment-button:hover {
+            background: #283540;
+        }
+
+
+        #imageUpload {
+            display: none;
+        }
+
+
+        #imageName {
+            color: #687681;
+
+            font-size: 10px;
+        }
+
+
+        /* =================================================
+           STATUS
+        ================================================= */
+
+        .oma-status {
+            margin-top: 5px;
+
+            color: #65727e;
+
+            font-size: 10px;
+        }
+
+
+        .oma-footer {
+            text-align: center;
+
+            color: #596570;
+
+            font-size: 9px;
+
+            margin-top: 4px;
+        }
+
+
+        /* =================================================
+           MODALS
+        ================================================= */
+
+        .oma-modal {
+            background: #121a22;
+
+            color: white;
+        }
+
+
+        .oma-modal .modal-header {
+            border-bottom-color:
+                #293540;
+        }
+
+
+        .oma-modal .modal-footer {
+            border-top-color:
+                #293540;
+        }
+
+
+        .oma-modal .form-control {
+            background: #1b2630;
+
+            border-color:
+                #35424e;
+
+            color: white;
+        }
+
+
+        .oma-modal small {
+            color: #788591;
+        }
+
+
+        /* =================================================
+           SIDEBAR OVERLAY
+        ================================================= */
+
+        .sidebar-overlay {
+            display: none;
+
+            position: fixed;
+
+            inset: 0;
+
+            background:
+                rgba(0,0,0,0.6);
+
+            z-index: 1900;
+        }
+
+
+        /* =================================================
+           MOBILE
+        ================================================= */
+
+        @media (max-width: 768px) {
+
+            .history-sidebar {
+                position: fixed;
+
+                left: -285px;
+
+                top: 0;
+
+                transition:
+                    left 0.25s ease;
+            }
+
+
+            .history-sidebar.open {
+                left: 0;
+            }
+
+
+            .sidebar-overlay.show {
+                display: block;
+            }
+
+
+            .oma-header {
+                padding:
+                    8px 12px;
+            }
+
+
+            .oma-chat {
+                padding:
+                    15px 10px;
+            }
+
+
+            .oma-input-section {
+                padding:
+                    8px 10px;
+            }
+
+
+            .message-body {
+                max-width: 85%;
+            }
+
+
+            .header-left p {
+                display: none;
+            }
+
+
+            .connection-status span:last-child {
+                display: none;
+            }
+
+
+            .quick-actions {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+        }
+
+
+        /* =================================================
+           SMALL PHONES
+        ================================================= */
+
+        @media (max-width: 420px) {
+
+            .oma-logo {
+                width: 42px;
+                height: 42px;
+            }
+
+
+            .header-left h1 {
+                font-size: 19px;
+            }
+
+
+            .quick-actions {
+                gap: 8px;
+            }
+
+
+            .quick-action {
+                padding:
+                    12px 6px;
+            }
+
+        }
+
+
+        /* =================================================
+           SCROLLBAR
+        ================================================= */
+
+        ::-webkit-scrollbar {
+            width: 7px;
+        }
+
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+
+        ::-webkit-scrollbar-thumb {
+            background: #293640;
+
+            border-radius: 10px;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="oma-app">
+
+
+    <!-- =================================================
+         SIDEBAR
+    ================================================= -->
+
+    <aside
+        id="historySidebar"
+        class="history-sidebar"
+    >
+
+        <div class="sidebar-header">
+
+            <div class="sidebar-brand">
+
+                <div class="small-logo">
+
+                    <img
+                        src="img/OMA Logo.jpg"
+                        alt="OMA"
+                    >
+
+                </div>
+
+                <strong>OMA</strong>
+
+            </div>
+
+
+            <button
+                id="closeSidebar"
+                class="sidebar-icon-button"
+            >
+
+                <i class="bi bi-x-lg"></i>
+
+            </button>
+
+        </div>
+
+
+        <button
+            id="newChatButton"
+            class="new-chat-button"
+        >
+
+            <i class="bi bi-plus-lg"></i>
+
+            New Chat
+
+        </button>
+
+
+        <div class="history-search">
+
+            <i class="bi bi-search"></i>
+
+            <input
+                id="historySearch"
+                type="text"
+                placeholder="Search chats..."
+            >
+
+        </div>
+
+
+        <div
+            id="historyList"
+            class="history-list"
+        ></div>
+
+
+        <div class="sidebar-bottom">
+
+            <button
+                class="sidebar-menu-button"
+                data-bs-toggle="modal"
+                data-bs-target="#settingsModal"
+            >
+
+                <i class="bi bi-gear"></i>
+
+                Settings
+
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- OVERLAY -->
+
+    <div
+        id="sidebarOverlay"
+        class="sidebar-overlay"
+    ></div>
+
+
+    <!-- =================================================
+         MAIN AREA
+    ================================================= -->
+
+    <div class="main-area">
+
+
+        <!-- HEADER -->
+
+        <header class="oma-header">
+
+            <div class="header-left">
+
+
+                <button
+                    id="openSidebar"
+                    class="header-button"
+                >
+
+                    <i class="bi bi-list"></i>
+
+                </button>
+
+
+                <div class="oma-logo">
+
+                    <img
+                        src="img/OMA Logo.jpg"
+                        alt="OMA Logo"
+                    >
+
+                </div>
+
+
+                <div>
+
+                    <h1>OMA</h1>
+
+                    <p>Your AI Assistant</p>
+
+                </div>
+
+            </div>
+
+
+            <div class="header-right">
+
+                <div class="connection-status">
+
+                    <span
+                        id="statusDot"
+                        class="status-dot"
+                    ></span>
+
+                    <span id="statusText">
+                        Connecting...
+                    </span>
+
+                </div>
+
+
+                <button
+                    class="header-button"
+                    data-bs-toggle="modal"
+                    data-bs-target="#settingsModal"
+                >
+
+                    <i class="bi bi-gear"></i>
+
+                </button>
+
+            </div>
+
+        </header>
+
+
+        <!-- =================================================
+             CHAT AREA
+        ================================================= -->
+
+        <main
+            id="chatArea"
+            class="oma-chat"
+        >
+
+            <div
+                id="messages"
+                class="chat-container"
+            ></div>
+
+        </main>
+
+
+        <!-- =================================================
+             INPUT
+        ================================================= -->
+
+        <section class="oma-input-section">
+
+            <div class="input-container">
+
+                <div class="oma-input-box">
+
+
+                    <button
+                        id="micButton"
+                        class="input-button mic-button"
+                        title="Voice input"
+                    >
+
+                        <i class="bi bi-mic"></i>
+
+                    </button>
+
+
+                    <textarea
+                        id="messageInput"
+                        class="oma-textarea"
+                        rows="1"
+                        placeholder="Message OMA..."
+                    ></textarea>
+
+
+                    <button
+                        id="sendButton"
+                        class="input-button send-button"
+                        title="Send message"
+                    >
+
+                        <i class="bi bi-send-fill"></i>
+
+                    </button>
+
+                </div>
+
+
+                <div class="attachment-bar">
+
+                    <label
+                        for="imageUpload"
+                        class="attachment-button"
+                    >
+
+                        <i class="bi bi-image"></i>
+
+                        Add Image
+
+                    </label>
+
+
+                    <input
+                        id="imageUpload"
+                        type="file"
+                        accept="image/*"
+                    >
+
+
+                    <span id="imageName">
+                        No image selected
+                    </span>
+
+                </div>
+
+
+                <div
+                    id="omaStatus"
+                    class="oma-status"
+                >
+
+                    Checking OMA cloud...
+
+                </div>
+
+
+                <div class="oma-footer">
+
+                    OMA AI • Cloud Prototype
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     SETTINGS MODAL
+====================================================== -->
+
+<div
+    class="modal fade"
+    id="settingsModal"
+    tabindex="-1"
+>
+
+    <div class="modal-dialog">
+
+        <div class="modal-content oma-modal">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    OMA Settings
+                </h5>
+
+
+                <button
+                    type="button"
+                    class="btn-close btn-close-white"
+                    data-bs-dismiss="modal"
+                ></button>
+
+            </div>
+
+
+            <div class="modal-body">
+
+                <label class="form-label">
+                    Appearance
+                </label>
+
+
+                <select
+                    id="appearanceSelect"
+                    class="form-select mb-3"
+                >
+
+                    <option>Dark</option>
+
+                    <option>Light</option>
+
+                    <option>System</option>
+
+                </select>
+
+
+                <label class="form-label">
+                    Voice
+                </label>
+
+
+                <select
+                    class="form-select mb-3"
+                >
+
+                    <option>OMA Voice</option>
+
+                    <option>System Voice</option>
+
+                </select>
+
+
+                <div class="form-check form-switch">
+
+                    <input
+                        id="saveHistorySetting"
+                        class="form-check-input"
+                        type="checkbox"
+                        checked
+                    >
+
+                    <label class="form-check-label">
+
+                        Save chat history
+
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                >
+
+                    Close
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     ALARM MODAL
+====================================================== -->
+
+<div
+    class="modal fade"
+    id="alarmModal"
+    tabindex="-1"
+>
+
+    <div class="modal-dialog">
+
+        <div class="modal-content oma-modal">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+
+                    <i class="bi bi-alarm"></i>
+
+                    Set Alarm
+
+                </h5>
+
+
+                <button
+                    type="button"
+                    class="btn-close btn-close-white"
+                    data-bs-dismiss="modal"
+                ></button>
+
+            </div>
+
+
+            <div class="modal-body">
+
+                <label class="form-label">
+                    Alarm time
+                </label>
+
+
+                <input
+                    id="alarmTime"
+                    type="time"
+                    class="form-control"
+                >
+
+
+                <small class="d-block mt-2">
+
+                    Browser prototype alarm.
+
+                </small>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                >
+
+                    Cancel
+
+                </button>
+
+
+                <button
+                    class="btn btn-primary"
+                    onclick="saveAlarm()"
+                >
+
+                    Save Alarm
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     TIMER MODAL
+====================================================== -->
+
+<div
+    class="modal fade"
+    id="timerModal"
+    tabindex="-1"
+>
+
+    <div class="modal-dialog">
+
+        <div class="modal-content oma-modal">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+
+                    <i class="bi bi-stopwatch"></i>
+
+                    Set Timer
+
+                </h5>
+
+
+                <button
+                    type="button"
+                    class="btn-close btn-close-white"
+                    data-bs-dismiss="modal"
+                ></button>
+
+            </div>
+
+
+            <div class="modal-body">
+
+                <div class="row">
+
+                    <div class="col-6">
+
+                        <label class="form-label">
+                            Minutes
+                        </label>
+
+                        <input
+                            id="timerMinutes"
+                            type="number"
+                            min="0"
+                            class="form-control"
+                            value="5"
+                        >
+
+                    </div>
+
+
+                    <div class="col-6">
+
+                        <label class="form-label">
+                            Seconds
+                        </label>
+
+                        <input
+                            id="timerSeconds"
+                            type="number"
+                            min="0"
+                            max="59"
+                            class="form-control"
+                            value="0"
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                >
+
+                    Cancel
+
+                </button>
+
+
+                <button
+                    class="btn btn-primary"
+                    onclick="saveTimer()"
+                >
+
+                    Start Timer
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     RENAME MODAL
+====================================================== -->
+
+<div
+    class="modal fade"
+    id="renameModal"
+    tabindex="-1"
+>
+
+    <div class="modal-dialog">
+
+        <div class="modal-content oma-modal">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    Rename Chat
+                </h5>
+
+
+                <button
+                    type="button"
+                    class="btn-close btn-close-white"
+                    data-bs-dismiss="modal"
+                ></button>
+
+            </div>
+
+
+            <div class="modal-body">
+
+                <input
+                    id="renameInput"
+                    class="form-control"
+                    type="text"
+                    placeholder="Chat name"
+                >
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                >
+
+                    Cancel
+
+                </button>
+
+
+                <button
+                    id="saveRenameButton"
+                    class="btn btn-primary"
+                >
+
+                    Rename
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     BOOTSTRAP JAVASCRIPT
+====================================================== -->
+
+<script src="js/bootstrap.bundle.min.js"></script>
+
+
+
+
+<script>
+   /* =========================================================
+   OMA WEBSITE - COMPLETE JAVASCRIPT
+   ========================================================= */
+
+
+/* =========================================================
+   STARTUP TEST
+   ========================================================= */
+
+console.log("======================================");
+console.log("OMA JAVASCRIPT IS RUNNING");
+console.log("======================================");
+
+
+/* =========================================================
+   BACKEND
+   ========================================================= */
+
+const OMA_BACKEND =
+    "https://oma-backend-zezm.onrender.com";
+
+const OMA_HEALTH_ENDPOINT =
+    OMA_BACKEND + "/health";
+
+const OMA_CHAT_ENDPOINT =
+    OMA_BACKEND + "/chat";
+
+
+console.log(
+    "OMA backend:",
+    OMA_BACKEND
+);
+
+
+/* =========================================================
+   VARIABLES
+   ========================================================= */
+
+let conversations = [];
+
+let currentConversationId = null;
+
+let conversationBeingRenamed = null;
+
+let selectedImage = null;
+
+let timerInterval = null;
+
+let alarmInterval = null;
+
+let recognition = null;
+
+let isListening = false;
+
+
+/* =========================================================
+   ELEMENTS
+   ========================================================= */
+
+const messages =
+    document.getElementById("messages");
+
+const chatArea =
+    document.getElementById("chatArea");
+
+const messageInput =
+    document.getElementById("messageInput");
+
+const sendButton =
+    document.getElementById("sendButton");
+
+const imageUpload =
+    document.getElementById("imageUpload");
+
+const imageName =
+    document.getElementById("imageName");
+
+const historyList =
+    document.getElementById("historyList");
+
+const historySearch =
+    document.getElementById("historySearch");
+
+const historySidebar =
+    document.getElementById("historySidebar");
+
+const sidebarOverlay =
+    document.getElementById("sidebarOverlay");
+
+const openSidebarButton =
+    document.getElementById("openSidebar");
+
+const closeSidebarButton =
+    document.getElementById("closeSidebar");
+
+const newChatButton =
+    document.getElementById("newChatButton");
+
+const statusText =
+    document.getElementById("statusText");
+
+const statusDot =
+    document.getElementById("statusDot");
+
+const omaStatus =
+    document.getElementById("omaStatus");
+
+const micButton =
+    document.getElementById("micButton");
+
+
+/* =========================================================
+   ELEMENT CHECK
+   ========================================================= */
+
+console.log("OMA: Checking page elements...");
+
+
+const requiredElements = {
+    messages,
+    chatArea,
+    messageInput,
+    sendButton,
+    imageUpload,
+    imageName,
+    historyList,
+    historySearch,
+    historySidebar,
+    sidebarOverlay,
+    openSidebarButton,
+    closeSidebarButton,
+    newChatButton,
+    statusText,
+    statusDot,
+    omaStatus,
+    micButton
+};
+
+
+Object.entries(requiredElements).forEach(
+    ([name, element]) => {
+
+        if (!element) {
+
+            console.error(
+                "OMA: Missing HTML element:",
+                name
+            );
+
+        } else {
+
+            console.log(
+                "OMA: Element found:",
+                name
+            );
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   BACKEND HEALTH CHECK
+   ========================================================= */
+
+async function checkBackend() {
+
+    console.log(
+        "OMA: Starting backend health check..."
+    );
+
+
+    if (!statusText ||
+        !statusDot ||
+        !omaStatus) {
+
+        console.error(
+            "OMA: Status elements are missing."
+        );
+
+        return;
+
+    }
+
+
+    statusText.textContent =
+        "Checking...";
+
+    statusDot.classList.remove(
+        "online"
+    );
+
+    omaStatus.textContent =
+        "Checking OMA cloud...";
+
+
+    const controller =
+        new AbortController();
+
+
+    const timeout =
+        setTimeout(
+            function() {
+
+                console.warn(
+                    "OMA: Health check timed out."
+                );
+
+                controller.abort();
+
+            },
+            15000
+        );
+
+
+    try {
+
+        console.log(
+            "OMA: Requesting:",
+            OMA_HEALTH_ENDPOINT
+        );
+
+
+        const response =
+            await fetch(
+                OMA_HEALTH_ENDPOINT,
+                {
+                    method: "GET",
+
+                    cache: "no-store",
+
+                    signal:
+                        controller.signal
+                }
+            );
+
+
+        clearTimeout(timeout);
+
+
+        console.log(
+            "OMA: Health HTTP status:",
+            response.status
+        );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Health check HTTP " +
+                response.status
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        console.log(
+            "OMA: Health response:",
+            data
+        );
+
+
+        if (
+            data &&
+            data.status === "healthy"
+        ) {
+
+            statusText.textContent =
+                "Online";
+
+
+            statusDot.classList.add(
+                "online"
+            );
+
+
+            omaStatus.textContent =
+                "OMA cloud connected";
+
+
+            console.log(
+                "======================================"
+            );
+
+            console.log(
+                "OMA CLOUD CONNECTION SUCCESSFUL"
+            );
+
+            console.log(
+                "======================================"
+            );
+
+
+        } else {
+
+            throw new Error(
+                "Unexpected health response: " +
+                JSON.stringify(data)
+            );
+
+        }
+
+    }
+
+    catch (error) {
+
+        clearTimeout(timeout);
+
+
+        console.error(
+            "OMA: Backend health check failed:",
+            error
+        );
+
+
+        statusText.textContent =
+            "Offline";
+
+
+        statusDot.classList.remove(
+            "online"
+        );
+
+
+        if (
+            error.name ===
+            "AbortError"
+        ) {
+
+            omaStatus.textContent =
+                "OMA cloud timeout";
+
+        } else {
+
+            omaStatus.textContent =
+                "OMA cloud unavailable";
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   LOAD HISTORY
+   ========================================================= */
+
+function loadHistory() {
+
+    console.log(
+        "OMA: Loading chat history..."
+    );
+
+
+    const saved =
+        localStorage.getItem(
+            "omaConversations"
+        );
+
+
+    if (saved) {
+
+        try {
+
+            conversations =
+                JSON.parse(saved);
+
+
+            if (
+                !Array.isArray(
+                    conversations
+                )
+            ) {
+
+                conversations = [];
+
+            }
+
+
+            console.log(
+                "OMA: Loaded conversations:",
+                conversations.length
+            );
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "OMA: Could not load history:",
+                error
+            );
+
+            conversations = [];
+
+        }
+
+    }
+
+
+    if (
+        conversations.length > 0
+    ) {
+
+        currentConversationId =
+            conversations[0].id;
+
+
+        renderConversation();
+
+    }
+
+    else {
+
+        createNewChat();
+
+    }
+
+
+    renderHistory();
+
+
+    console.log(
+        "OMA: HISTORY LOADED"
+    );
+
+}
+
+
+/* =========================================================
+   SAVE HISTORY
+   ========================================================= */
+
+function saveHistory() {
+
+    const setting =
+        document.getElementById(
+            "saveHistorySetting"
+        );
+
+
+    if (
+        setting &&
+        !setting.checked
+    ) {
+
+        return;
+
+    }
+
+
+    try {
+
+        localStorage.setItem(
+            "omaConversations",
+            JSON.stringify(
+                conversations
+            )
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "OMA: Failed to save history:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   CREATE NEW CHAT
+   ========================================================= */
+
+function createNewChat() {
+
+    const chat = {
+
+        id:
+            Date.now().toString(),
+
+        title:
+            "New Chat",
+
+        messages: [],
+
+        createdAt:
+            new Date().toISOString(),
+
+        updatedAt:
+            new Date().toISOString()
+
+    };
+
+
+    conversations.unshift(
+        chat
+    );
+
+
+    currentConversationId =
+        chat.id;
+
+
+    saveHistory();
+
+    renderHistory();
+
+    renderConversation();
+
+    closeSidebar();
+
+
+    console.log(
+        "OMA: New chat created."
+    );
+
+}
+
+
+/* =========================================================
+   GET CURRENT CHAT
+   ========================================================= */
+
+function getCurrentChat() {
+
+    return conversations.find(
+        function(chat) {
+
+            return (
+                chat.id ===
+                currentConversationId
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   OPEN CONVERSATION
+   ========================================================= */
+
+function openConversation(id) {
+
+    const chat =
+        conversations.find(
+            function(item) {
+
+                return (
+                    item.id === id
+                );
+
+            }
+        );
+
+
+    if (!chat) {
+
+        console.warn(
+            "OMA: Conversation not found:",
+            id
+        );
+
+        return;
+
+    }
+
+
+    currentConversationId =
+        id;
+
+
+    renderConversation();
+
+    renderHistory();
+
+    closeSidebar();
+
+}
+
+
+/* =========================================================
+   RENDER CONVERSATION
+   ========================================================= */
+
+function renderConversation() {
+
+    const chat =
+        getCurrentChat();
+
+
+    if (!messages) {
+
+        return;
+
+    }
+
+
+    messages.innerHTML = "";
+
+
+    if (
+        !chat ||
+        !Array.isArray(
+            chat.messages
+        ) ||
+        chat.messages.length === 0
+    ) {
+
+        showWelcome();
+
+        return;
+
+    }
+
+
+    chat.messages.forEach(
+        function(message) {
+
+            renderMessage(
+                message
+            );
+
+        }
+    );
+
+
+    scrollBottom();
+
+}
+
+
+/* =========================================================
+   WELCOME SCREEN
+   ========================================================= */
+
+function showWelcome() {
+
+    if (!messages) {
+
+        return;
+
+    }
+
+
+    messages.innerHTML = `
+
+        <div class="welcome">
+
+            <h2>
+                Hello, I'm OMA
+            </h2>
+
+            <p>
+                Your personal AI assistant.
+            </p>
+
+            <div class="quick-actions">
+
+
+                <button
+                    class="quick-action"
+                    id="homeworkQuickButton"
+                >
+
+                    <i class="bi bi-book"></i>
+
+                    <span>
+                        Homework
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="quick-action"
+                    id="timerQuickButton"
+                >
+
+                    <i class="bi bi-stopwatch"></i>
+
+                    <span>
+                        Timer
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="quick-action"
+                    id="alarmQuickButton"
+                >
+
+                    <i class="bi bi-alarm"></i>
+
+                    <span>
+                        Alarm
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="quick-action"
+                    id="explainQuickButton"
+                >
+
+                    <i class="bi bi-lightbulb"></i>
+
+                    <span>
+                        Explain
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="quick-action"
+                    id="planQuickButton"
+                >
+
+                    <i class="bi bi-calendar3"></i>
+
+                    <span>
+                        Plan my day
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="quick-action"
+                    id="imageQuickButton"
+                >
+
+                    <i class="bi bi-image"></i>
+
+                    <span>
+                        Analyze Image
+                    </span>
+
+                </button>
+
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    const homeworkButton =
+        document.getElementById(
+            "homeworkQuickButton"
+        );
+
+    const timerButton =
+        document.getElementById(
+            "timerQuickButton"
+        );
+
+    const alarmButton =
+        document.getElementById(
+            "alarmQuickButton"
+        );
+
+    const explainButton =
+        document.getElementById(
+            "explainQuickButton"
+        );
+
+    const planButton =
+        document.getElementById(
+            "planQuickButton"
+        );
+
+    const imageButton =
+        document.getElementById(
+            "imageQuickButton"
+        );
+
+
+    if (homeworkButton) {
+
+        homeworkButton.onclick =
+            function() {
+
+                quickMessage(
+                    "Help me with my homework"
+                );
+
+            };
+
+    }
+
+
+    if (timerButton) {
+
+        timerButton.onclick =
+            openTimer;
+
+    }
+
+
+    if (alarmButton) {
+
+        alarmButton.onclick =
+            openAlarm;
+
+    }
+
+
+    if (explainButton) {
+
+        explainButton.onclick =
+            function() {
+
+                quickMessage(
+                    "Explain something to me"
+                );
+
+            };
+
+    }
+
+
+    if (planButton) {
+
+        planButton.onclick =
+            function() {
+
+                quickMessage(
+                    "Help me plan my day"
+                );
+
+            };
+
+    }
+
+
+    if (imageButton) {
+
+        imageButton.onclick =
+            function() {
+
+                if (imageUpload) {
+
+                    imageUpload.click();
+
+                }
+
+            };
+
+    }
+
+}
+
+
+/* =========================================================
+   ADD MESSAGE
+   ========================================================= */
+
+function addMessage(
+    sender,
+    text,
+    image = null
+) {
+
+    const chat =
+        getCurrentChat();
+
+
+    if (!chat) {
+
+        console.error(
+            "OMA: No current chat."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        !Array.isArray(
+            chat.messages
+        )
+    ) {
+
+        chat.messages = [];
+
+    }
+
+
+    chat.messages.push({
+
+        sender:
+            sender,
+
+        text:
+            text || "",
+
+        image:
+            image,
+
+        time:
+            new Date().toISOString()
+
+    });
+
+
+    if (
+        sender === "user" &&
+        chat.title === "New Chat"
+    ) {
+
+        const titleText =
+            text &&
+            text.trim()
+                ? text.trim()
+                : "Image Chat";
+
+
+        chat.title =
+            titleText.substring(
+                0,
+                35
+            );
+
+    }
+
+
+    chat.updatedAt =
+        new Date().toISOString();
+
+
+    saveHistory();
+
+    renderConversation();
+
+    renderHistory();
+
+}
+
+
+/* =========================================================
+   RENDER MESSAGE
+   ========================================================= */
+
+function renderMessage(message) {
+
+    const wrapper =
+        document.createElement(
+            "div"
+        );
+
+
+    wrapper.className =
+        "message " +
+        (
+            message.sender === "user"
+                ? "user-message"
+                : ""
+        );
+
+
+    const avatar =
+        document.createElement(
+            "div"
+        );
+
+
+    avatar.className =
+        "message-avatar";
+
+
+    avatar.textContent =
+        message.sender === "user"
+            ? "U"
+            : "O";
+
+
+    const body =
+        document.createElement(
+            "div"
+        );
+
+
+    body.className =
+        "message-body";
+
+
+    const name =
+        document.createElement(
+            "span"
+        );
+
+
+    name.className =
+        "message-name";
+
+
+    name.textContent =
+        message.sender === "user"
+            ? "You"
+            : "OMA";
+
+
+    const text =
+        document.createElement(
+            "div"
+        );
+
+
+    text.className =
+        "message-text";
+
+
+    text.textContent =
+        message.text || "";
+
+
+    body.appendChild(
+        name
+    );
+
+
+    body.appendChild(
+        text
+    );
+
+
+    if (message.image) {
+
+        const image =
+            document.createElement(
+                "img"
+            );
+
+
+        image.src =
+            message.image;
+
+
+        image.className =
+            "uploaded-image";
+
+
+        image.alt =
+            "Uploaded image";
+
+
+        body.appendChild(
+            image
+        );
+
+    }
+
+
+    wrapper.appendChild(
+        avatar
+    );
+
+
+    wrapper.appendChild(
+        body
+    );
+
+
+    messages.appendChild(
+        wrapper
+    );
+
+}
+
+
+/* =========================================================
+   SEND MESSAGE
+   ========================================================= */
+
+function sendMessage() {
+
+    if (
+        sendButton &&
+        sendButton.disabled
+    ) {
+
+        return;
+
+    }
+
+
+    const text =
+        messageInput.value.trim();
+
+
+    if (
+        !text &&
+        !selectedImage
+    ) {
+
+        return;
+
+    }
+
+
+    if (selectedImage) {
+
+        const reader =
+            new FileReader();
+
+
+        reader.onload =
+            function(event) {
+
+                finishSending(
+                    text,
+                    event.target.result
+                );
+
+            };
+
+
+        reader.onerror =
+            function(error) {
+
+                console.error(
+                    "OMA: Image read error:",
+                    error
+                );
+
+                omaStatus.textContent =
+                    "Could not read image";
+
+            };
+
+
+        reader.readAsDataURL(
+            selectedImage
+        );
+
+    }
+
+    else {
+
+        finishSending(
+            text,
+            null
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   CLOUD CHAT
+   ========================================================= */
+
+async function finishSending(
+    text,
+    image
+) {
+
+    console.log(
+        "OMA: Sending message..."
+    );
+
+
+    addMessage(
+        "user",
+        text || "Image",
+        image
+    );
+
+
+    messageInput.value =
+        "";
+
+
+    messageInput.style.height =
+        "auto";
+
+
+    clearImage();
+
+
+    omaStatus.textContent =
+        "OMA is thinking...";
+
+
+    sendButton.disabled =
+        true;
+
+
+    try {
+
+        console.log(
+            "OMA: POST",
+            OMA_CHAT_ENDPOINT
+        );
+
+
+        const requestBody = {
+
+            message:
+                text ||
+                "Please analyze this image."
+
+        };
+
+
+        const response =
+            await fetch(
+                OMA_CHAT_ENDPOINT,
+                {
+
+                    method:
+                        "POST",
+
+                    headers:
+                        {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                    body:
+                        JSON.stringify(
+                            requestBody
+                        )
+
+                }
+            );
+
+
+        console.log(
+            "OMA: Chat HTTP status:",
+            response.status
+        );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "HTTP error: " +
+                response.status
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        console.log(
+            "OMA: Chat response:",
+            data
+        );
+
+
+        const omaReply =
+            data.response ||
+            data.message ||
+            data.reply ||
+            data.answer;
+
+
+        if (!omaReply) {
+
+            throw new Error(
+                "Backend returned no response text."
+            );
+
+        }
+
+
+        addMessage(
+            "oma",
+            omaReply
+        );
+
+
+        omaStatus.textContent =
+            "OMA is ready";
+
+
+        console.log(
+            "OMA: Message successfully received."
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "OMA: Chat backend error:",
+            error
+        );
+
+
+        addMessage(
+            "oma",
+            "I couldn't reach the OMA cloud backend right now."
+        );
+
+
+        omaStatus.textContent =
+            "Backend connection error";
+
+    }
+
+    finally {
+
+        sendButton.disabled =
+            false;
+
+    }
+
+}
+
+
+/* =========================================================
+   QUICK MESSAGE
+   ========================================================= */
+
+function quickMessage(text) {
+
+    if (!messageInput) {
+
+        return;
+
+    }
+
+
+    messageInput.value =
+        text;
+
+
+    sendMessage();
+
+}
+
+
+/* =========================================================
+   IMAGE UPLOAD
+   ========================================================= */
+
+if (imageUpload) {
+
+    imageUpload.addEventListener(
+        "change",
+        function() {
+
+            if (
+                this.files &&
+                this.files.length > 0
+            ) {
+
+                selectedImage =
+                    this.files[0];
+
+
+                imageName.textContent =
+                    selectedImage.name;
+
+
+                omaStatus.textContent =
+                    "Image selected";
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   CLEAR IMAGE
+   ========================================================= */
+
+function clearImage() {
+
+    selectedImage =
+        null;
+
+
+    if (imageUpload) {
+
+        imageUpload.value =
+            "";
+
+    }
+
+
+    if (imageName) {
+
+        imageName.textContent =
+            "No image selected";
+
+    }
+
+}
+
+
+/* =========================================================
+   NEW CHAT BUTTON
+   ========================================================= */
+
+if (newChatButton) {
+
+    newChatButton.addEventListener(
+        "click",
+        createNewChat
+    );
+
+}
+
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+if (historySearch) {
+
+    historySearch.addEventListener(
+        "input",
+        renderHistory
+    );
+
+}
+
+
+/* =========================================================
+   RENDER HISTORY
+   ========================================================= */
+
+function renderHistory() {
+
+    if (!historyList) {
+
+        return;
+
+    }
+
+
+    historyList.innerHTML =
+        "";
+
+
+    const search =
+        historySearch
+            ? historySearch.value
+                .toLowerCase()
+                .trim()
+            : "";
+
+
+    const filtered =
+        conversations
+            .filter(
+                function(chat) {
+
+                    return (
+                        chat.title &&
+                        chat.title
+                            .toLowerCase()
+                            .includes(search)
+                    );
+
+                }
+            )
+            .sort(
+                function(a, b) {
+
+                    return (
+                        new Date(
+                            b.updatedAt
+                        ) -
+                        new Date(
+                            a.updatedAt
+                        )
+                    );
+
+                }
+            );
+
+
+    filtered.forEach(
+        function(chat) {
+
+            const item =
+                document.createElement(
+                    "div"
+                );
+
+
+            item.className =
+                "history-item";
+
+
+            if (
+                chat.id ===
+                currentConversationId
+            ) {
+
+                item.classList.add(
+                    "active"
+                );
+
+            }
+
+
+            const icon =
+                document.createElement(
+                    "i"
+                );
+
+
+            icon.className =
+                "bi bi-chat-left-text";
+
+
+            const title =
+                document.createElement(
+                    "div"
+                );
+
+
+            title.className =
+                "history-item-title";
+
+
+            title.textContent =
+                chat.title ||
+                "New Chat";
+
+
+            const actions =
+                document.createElement(
+                    "div"
+                );
+
+
+            actions.className =
+                "history-actions";
+
+
+            const rename =
+                document.createElement(
+                    "button"
+                );
+
+
+            rename.className =
+                "history-action";
+
+
+            rename.type =
+                "button";
+
+
+            rename.title =
+                "Rename";
+
+
+            rename.innerHTML =
+                '<i class="bi bi-pencil"></i>';
+
+
+            rename.onclick =
+                function(event) {
+
+                    event.stopPropagation();
+
+                    renameChat(
+                        chat.id
+                    );
+
+                };
+
+
+            const deleteButton =
+                document.createElement(
+                    "button"
+                );
+
+
+            deleteButton.className =
+                "history-action";
+
+
+            deleteButton.type =
+                "button";
+
+
+            deleteButton.title =
+                "Delete";
+
+
+            deleteButton.innerHTML =
+                '<i class="bi bi-trash"></i>';
+
+
+            deleteButton.onclick =
+                function(event) {
+
+                    event.stopPropagation();
+
+                    deleteChat(
+                        chat.id
+                    );
+
+                };
+
+
+            actions.appendChild(
+                rename
+            );
+
+
+            actions.appendChild(
+                deleteButton
+            );
+
+
+            item.appendChild(
+                icon
+            );
+
+
+            item.appendChild(
+                title
+            );
+
+
+            item.appendChild(
+                actions
+            );
+
+
+            item.onclick =
+                function() {
+
+                    openConversation(
+                        chat.id
+                    );
+
+                };
+
+
+            historyList.appendChild(
+                item
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   DELETE CHAT
+   ========================================================= */
+
+function deleteChat(id) {
+
+    const confirmed =
+        confirm(
+            "Delete this conversation?"
+        );
+
+
+    if (!confirmed) {
+
+        return;
+
+    }
+
+
+    conversations =
+        conversations.filter(
+            function(chat) {
+
+                return (
+                    chat.id !== id
+                );
+
+            }
+        );
+
+
+    if (
+        currentConversationId ===
+        id
+    ) {
+
+        if (
+            conversations.length > 0
+        ) {
+
+            currentConversationId =
+                conversations[0].id;
+
+        }
+
+        else {
+
+            createNewChat();
+
+            return;
+
+        }
+
+    }
+
+
+    saveHistory();
+
+    renderConversation();
+
+    renderHistory();
+
+}
+
+
+/* =========================================================
+   RENAME CHAT
+   ========================================================= */
+
+function renameChat(id) {
+
+    conversationBeingRenamed =
+        id;
+
+
+    const chat =
+        conversations.find(
+            function(item) {
+
+                return (
+                    item.id === id
+                );
+
+            }
+        );
+
+
+    if (!chat) {
+
+        return;
+
+    }
+
+
+    const renameInput =
+        document.getElementById(
+            "renameInput"
+        );
+
+
+    if (renameInput) {
+
+        renameInput.value =
+            chat.title;
+
+    }
+
+
+    const modalElement =
+        document.getElementById(
+            "renameModal"
+        );
+
+
+    if (!modalElement) {
+
+        return;
+
+    }
+
+
+    const modal =
+        new bootstrap.Modal(
+            modalElement
+        );
+
+
+    modal.show();
+
+}
+
+
+/* =========================================================
+   SAVE RENAME
+   ========================================================= */
+
+const saveRenameButton =
+    document.getElementById(
+        "saveRenameButton"
+    );
+
+
+if (saveRenameButton) {
+
+    saveRenameButton.addEventListener(
+        "click",
+        function() {
+
+            const chat =
+                conversations.find(
+                    function(item) {
+
+                        return (
+                            item.id ===
+                            conversationBeingRenamed
+                        );
+
+                    }
+                );
+
+
+            if (!chat) {
+
+                return;
+
+            }
+
+
+            const renameInput =
+                document.getElementById(
+                    "renameInput"
+                );
+
+
+            const newName =
+                renameInput
+                    ? renameInput.value.trim()
+                    : "";
+
+
+            if (newName) {
+
+                chat.title =
+                    newName;
+
+                chat.updatedAt =
+                    new Date()
+                        .toISOString();
+
+            }
+
+
+            saveHistory();
+
+            renderHistory();
+
+
+            const modalElement =
+                document.getElementById(
+                    "renameModal"
+                );
+
+
+            const modal =
+                bootstrap.Modal.getInstance(
+                    modalElement
+                );
+
+
+            if (modal) {
+
+                modal.hide();
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   SIDEBAR OPEN
+   ========================================================= */
+
+if (openSidebarButton) {
+
+    openSidebarButton.addEventListener(
+        "click",
+        function(event) {
+
+            event.stopPropagation();
+
+
+            historySidebar.classList.add(
+                "open"
+            );
+
+
+            sidebarOverlay.classList.add(
+                "show"
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   SIDEBAR CLOSE
+   ========================================================= */
+
+if (closeSidebarButton) {
+
+    closeSidebarButton.addEventListener(
+        "click",
+        closeSidebar
+    );
+
+}
+
+
+if (sidebarOverlay) {
+
+    sidebarOverlay.addEventListener(
+        "click",
+        closeSidebar
+    );
+
+}
+
+
+function closeSidebar() {
+
+    if (historySidebar) {
+
+        historySidebar.classList.remove(
+            "open"
+        );
+
+    }
+
+
+    if (sidebarOverlay) {
+
+        sidebarOverlay.classList.remove(
+            "show"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   ALARM
+   ========================================================= */
+
+function openAlarm() {
+
+    const modalElement =
+        document.getElementById(
+            "alarmModal"
+        );
+
+
+    if (!modalElement) {
+
+        console.error(
+            "OMA: Alarm modal not found."
+        );
+
+        return;
+
+    }
+
+
+    const modal =
+        new bootstrap.Modal(
+            modalElement
+        );
+
+
+    modal.show();
+
+}
+
+
+function saveAlarm() {
+
+    const alarmInput =
+        document.getElementById(
+            "alarmTime"
+        );
+
+
+    if (!alarmInput) {
+
+        return;
+
+    }
+
+
+    const time =
+        alarmInput.value;
+
+
+    if (!time) {
+
+        alert(
+            "Please select a time."
+        );
+
+        return;
+
+    }
+
+
+    if (alarmInterval) {
+
+        clearInterval(
+            alarmInterval
+        );
+
+    }
+
+
+    alarmInterval =
+        setInterval(
+            function() {
+
+                const now =
+                    new Date();
+
+
+                const current =
+                    now
+                        .toTimeString()
+                        .slice(
+                            0,
+                            5
+                        );
+
+
+                if (
+                    current === time
+                ) {
+
+                    clearInterval(
+                        alarmInterval
+                    );
+
+
+                    omaStatus.textContent =
+                        "Alarm ringing";
+
+
+                    alert(
+                        "OMA Alarm: " +
+                        time
+                    );
+
+                }
+
+            },
+            1000
+        );
+
+
+    omaStatus.textContent =
+        "Alarm set for " +
+        time;
+
+
+    alert(
+        "Alarm set for " +
+        time
+    );
+
+
+    const modalElement =
+        document.getElementById(
+            "alarmModal"
+        );
+
+
+    const modal =
+        bootstrap.Modal.getInstance(
+            modalElement
+        );
+
+
+    if (modal) {
+
+        modal.hide();
+
+    }
+
+}
+
+
+/* =========================================================
+   TIMER
+   ========================================================= */
+
+function openTimer() {
+
+    const modalElement =
+        document.getElementById(
+            "timerModal"
+        );
+
+
+    if (!modalElement) {
+
+        console.error(
+            "OMA: Timer modal not found."
+        );
+
+        return;
+
+    }
+
+
+    const modal =
+        new bootstrap.Modal(
+            modalElement
+        );
+
+
+    modal.show();
+
+}
+
+
+function saveTimer() {
+
+    const minutesInput =
+        document.getElementById(
+            "timerMinutes"
+        );
+
+
+    const secondsInput =
+        document.getElementById(
+            "timerSeconds"
+        );
+
+
+    if (
+        !minutesInput ||
+        !secondsInput
+    ) {
+
+        return;
+
+    }
+
+
+    const minutes =
+        Number(
+            minutesInput.value
+        );
+
+
+    const seconds =
+        Number(
+            secondsInput.value
+        );
+
+
+    if (
+        minutes < 0 ||
+        seconds < 0 ||
+        seconds > 59
+    ) {
+
+        alert(
+            "Please enter a valid timer."
+        );
+
+        return;
+
+    }
+
+
+    let totalSeconds =
+        minutes * 60 +
+        seconds;
+
+
+    if (
+        totalSeconds <= 0
+    ) {
+
+        alert(
+            "Please enter a valid timer."
+        );
+
+        return;
+
+    }
+
+
+    const modalElement =
+        document.getElementById(
+            "timerModal"
+        );
+
+
+    const modal =
+        bootstrap.Modal.getInstance(
+            modalElement
+        );
+
+
+    if (modal) {
+
+        modal.hide();
+
+    }
+
+
+    if (timerInterval) {
+
+        clearInterval(
+            timerInterval
+        );
+
+    }
+
+
+    omaStatus.textContent =
+        "Timer running...";
+
+
+    updateTimerStatus(
+        totalSeconds
+    );
+
+
+    timerInterval =
+        setInterval(
+            function() {
+
+                totalSeconds--;
+
+
+                if (
+                    totalSeconds <= 0
+                ) {
+
+                    clearInterval(
+                        timerInterval
+                    );
+
+
+                    timerInterval =
+                        null;
+
+
+                    omaStatus.textContent =
+                        "Timer finished";
+
+
+                    alert(
+                        "OMA Timer finished!"
+                    );
+
+
+                    return;
+
+                }
+
+
+                updateTimerStatus(
+                    totalSeconds
+                );
+
+            },
+            1000
+        );
+
+}
+
+
+function updateTimerStatus(
+    totalSeconds
+) {
+
+    const mins =
+        Math.floor(
+            totalSeconds / 60
+        );
+
+
+    const secs =
+        totalSeconds % 60;
+
+
+    omaStatus.textContent =
+        "Timer: " +
+        mins +
+        ":" +
+        String(secs)
+            .padStart(
+                2,
+                "0"
+            );
+
+}
+
+
+/* =========================================================
+   MICROPHONE
+   ========================================================= */
+
+function setupMicrophone() {
+
+    console.log(
+        "OMA: Setting up microphone..."
+    );
+
+
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+
+    if (!SpeechRecognition) {
+
+        console.warn(
+            "OMA: Speech recognition is not supported."
+        );
+
+
+        if (micButton) {
+
+            micButton.onclick =
+                function() {
+
+                    alert(
+                        "Voice input is not supported by this browser."
+                    );
+
+                };
+
+        }
+
+
+        return;
+
+    }
+
+
+    recognition =
+        new SpeechRecognition();
+
+
+    recognition.lang =
+        "en-US";
+
+
+    recognition.continuous =
+        false;
+
+
+    recognition.interimResults =
+        false;
+
+
+    recognition.onstart =
+        function() {
+
+            isListening =
+                true;
+
+
+            omaStatus.textContent =
+                "Listening...";
+
+
+            if (micButton) {
+
+                micButton.innerHTML =
+                    '<i class="bi bi-mic-fill"></i>';
+
+            }
+
+        };
+
+
+    recognition.onresult =
+        function(event) {
+
+            const transcript =
+                event.results[0][0]
+                    .transcript;
+
+
+            messageInput.value =
+                transcript;
+
+
+            messageInput.dispatchEvent(
+                new Event(
+                    "input"
+                )
+            );
+
+
+            omaStatus.textContent =
+                "Voice captured";
+
+
+            console.log(
+                "OMA: Voice transcript:",
+                transcript
+            );
+
+        };
+
+
+    recognition.onerror =
+        function(event) {
+
+            console.error(
+                "OMA: Microphone error:",
+                event.error
+            );
+
+
+            omaStatus.textContent =
+                "Microphone error";
+
+        };
+
+
+    recognition.onend =
+        function() {
+
+            isListening =
+                false;
+
+
+            if (micButton) {
+
+                micButton.innerHTML =
+                    '<i class="bi bi-mic"></i>';
+
+            }
+
+        };
+
+
+    if (micButton) {
+
+        micButton.addEventListener(
+            "click",
+            function() {
+
+                if (isListening) {
+
+                    recognition.stop();
+
+                    return;
+
+                }
+
+
+                try {
+
+                    recognition.start();
+
+                }
+
+                catch (error) {
+
+                    console.error(
+                        "OMA: Could not start microphone:",
+                        error
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   TEXTAREA
+   ========================================================= */
+
+if (messageInput) {
+
+    messageInput.addEventListener(
+        "input",
+        function() {
+
+            this.style.height =
+                "auto";
+
+
+            this.style.height =
+                Math.min(
+                    this.scrollHeight,
+                    130
+                ) +
+                "px";
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   ENTER TO SEND
+   ========================================================= */
+
+if (messageInput) {
+
+    messageInput.addEventListener(
+        "keydown",
+        function(event) {
+
+            if (
+                event.key === "Enter" &&
+                !event.shiftKey
+            ) {
+
+                event.preventDefault();
+
+                sendMessage();
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   SEND BUTTON
+   ========================================================= */
+
+if (sendButton) {
+
+    sendButton.addEventListener(
+        "click",
+        sendMessage
+    );
+
+}
+
+
+/* =========================================================
+   SCROLL
+   ========================================================= */
+
+function scrollBottom() {
+
+    setTimeout(
+        function() {
+
+            if (chatArea) {
+
+                chatArea.scrollTop =
+                    chatArea.scrollHeight;
+
+            }
+
+        },
+        50
+    );
+
+}
+
+
+/* =========================================================
+   START OMA
+   ========================================================= */
+
+console.log(
+    "OMA: ABOUT TO START"
+);
+
+
+loadHistory();
+
+
+console.log(
+    "OMA: HISTORY LOADED"
+);
+
+
+checkBackend();
+
+
+console.log(
+    "OMA: HEALTH CHECK CALLED"
+);
+
+
+setupMicrophone();
+
+
+console.log(
+    "======================================"
+);
+
+console.log(
+    "OMA INITIALIZATION COMPLETE"
+);
+
+console.log(
+    "======================================"
+);
+
+</script>
+
+</body>
+
+</html>
