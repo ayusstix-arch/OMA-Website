@@ -691,6 +691,14 @@
         }
 
 
+        .message-time {
+            color: #65727e;
+            font-size: 10px;
+            margin-left: 6px;
+            font-weight: normal;
+        }
+
+
         .message-text {
             background: #19232d;
 
@@ -1778,7 +1786,7 @@
 
 
 <script>
-   /* =========================================================
+/* =========================================================
    OMA WEBSITE - COMPLETE JAVASCRIPT
    ========================================================= */
 
@@ -2372,6 +2380,124 @@ function openConversation(id) {
 
 
 /* =========================================================
+   FORMAT MESSAGE TIME
+   ========================================================= */
+
+function formatMessageTime(timestamp) {
+
+    if (!timestamp) {
+
+        return "";
+
+    }
+
+
+    const date =
+        new Date(timestamp);
+
+
+    if (
+        isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return "";
+
+    }
+
+
+    return date.toLocaleTimeString([], {
+
+        hour:
+            "numeric",
+
+        minute:
+            "2-digit"
+
+    });
+
+}
+
+
+/* =========================================================
+   FORMAT MESSAGE DATE
+   ========================================================= */
+
+function formatMessageDate(timestamp) {
+
+    if (!timestamp) {
+
+        return "";
+
+    }
+
+
+    const date =
+        new Date(timestamp);
+
+
+    if (
+        isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return "";
+
+    }
+
+
+    const today =
+        new Date();
+
+
+    const yesterday =
+        new Date();
+
+
+    yesterday.setDate(
+        yesterday.getDate() - 1
+    );
+
+
+    if (
+        date.toDateString() ===
+        today.toDateString()
+    ) {
+
+        return "Today";
+
+    }
+
+
+    if (
+        date.toDateString() ===
+        yesterday.toDateString()
+    ) {
+
+        return "Yesterday";
+
+    }
+
+
+    return date.toLocaleDateString([], {
+
+        day:
+            "numeric",
+
+        month:
+            "long",
+
+        year:
+            "numeric"
+
+    });
+
+}
+
+
+/* =========================================================
    RENDER CONVERSATION
    ========================================================= */
 
@@ -2406,8 +2532,59 @@ function renderConversation() {
     }
 
 
+    let lastMessageDate = "";
+
+
     chat.messages.forEach(
         function(message) {
+
+            const messageDate =
+                formatMessageDate(
+                    message.time
+                );
+
+
+            if (
+                messageDate &&
+                messageDate !== lastMessageDate
+            ) {
+
+                const dateSeparator =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                dateSeparator.style.textAlign =
+                    "center";
+
+
+                dateSeparator.style.color =
+                    "#65727e";
+
+
+                dateSeparator.style.fontSize =
+                    "10px";
+
+
+                dateSeparator.style.margin =
+                    "15px 0";
+
+
+                dateSeparator.textContent =
+                    messageDate;
+
+
+                messages.appendChild(
+                    dateSeparator
+                );
+
+
+                lastMessageDate =
+                    messageDate;
+
+            }
+
 
             renderMessage(
                 message
@@ -2546,25 +2723,30 @@ function showWelcome() {
             "homeworkQuickButton"
         );
 
+
     const timerButton =
         document.getElementById(
             "timerQuickButton"
         );
+
 
     const alarmButton =
         document.getElementById(
             "alarmQuickButton"
         );
 
+
     const explainButton =
         document.getElementById(
             "explainQuickButton"
         );
 
+
     const planButton =
         document.getElementById(
             "planQuickButton"
         );
+
 
     const imageButton =
         document.getElementById(
@@ -2796,6 +2978,35 @@ function renderMessage(message) {
         message.sender === "user"
             ? "You"
             : "OMA";
+
+
+    const time =
+        formatMessageTime(
+            message.time
+        );
+
+
+    if (time) {
+
+        const timeElement =
+            document.createElement(
+                "span"
+            );
+
+
+        timeElement.className =
+            "message-time";
+
+
+        timeElement.textContent =
+            time;
+
+
+        name.appendChild(
+            timeElement
+        );
+
+    }
 
 
     const text =
