@@ -7,7 +7,12 @@
 
     <meta
         name="viewport"
-        content="width=device-width, initial-scale=1.0"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    >
+
+    <meta
+        name="theme-color"
+        content="#0a1017"
     >
 
     <title>OMA - AI Assistant</title>
@@ -49,6 +54,7 @@
             width: 100%;
             height: 100%;
             margin: 0;
+            padding: 0;
         }
 
 
@@ -60,9 +66,20 @@
 
             background: #080d12;
 
-            color: white;
+            color: #ffffff;
 
             overflow: hidden;
+
+            -webkit-font-smoothing: antialiased;
+
+            text-rendering: optimizeLegibility;
+        }
+
+
+        button,
+        input,
+        textarea {
+            font-family: inherit;
         }
 
 
@@ -73,10 +90,19 @@
         .oma-app {
             width: 100%;
             height: 100vh;
+            height: 100dvh;
+
+            min-height: 0;
 
             display: flex;
 
-            background: #0c1218;
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(52, 127, 189, 0.07),
+                    transparent 35%
+                ),
+                #0a1017;
         }
 
 
@@ -87,18 +113,22 @@
         .history-sidebar {
             width: 285px;
             height: 100vh;
+            height: 100dvh;
 
             flex-shrink: 0;
 
             display: flex;
             flex-direction: column;
 
-            background: #111820;
+            background:
+                rgba(17, 24, 32, 0.98);
 
             border-right:
-                1px solid #27323d;
+                1px solid #27333f;
 
             z-index: 2000;
+
+            backdrop-filter: blur(15px);
         }
 
 
@@ -112,7 +142,7 @@
             justify-content: space-between;
 
             border-bottom:
-                1px solid #27323d;
+                1px solid #27333f;
         }
 
 
@@ -139,6 +169,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
+
+            border:
+                1px solid #344451;
         }
 
 
@@ -151,18 +184,26 @@
 
 
         .sidebar-icon-button {
-            width: 35px;
-            height: 35px;
+            width: 36px;
+            height: 36px;
 
             border: none;
 
-            border-radius: 8px;
+            border-radius: 9px;
 
             background: transparent;
 
             color: #9aa7b3;
 
             cursor: pointer;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            transition:
+                background 0.2s ease,
+                color 0.2s ease;
         }
 
 
@@ -185,9 +226,14 @@
             border:
                 1px solid #35434f;
 
-            border-radius: 10px;
+            border-radius: 11px;
 
-            background: #1b2732;
+            background:
+                linear-gradient(
+                    180deg,
+                    #1d2a35,
+                    #18232d
+                );
 
             color: white;
 
@@ -198,11 +244,20 @@
             gap: 8px;
 
             cursor: pointer;
+
+            transition:
+                background 0.2s ease,
+                transform 0.15s ease;
         }
 
 
         .new-chat-button:hover {
-            background: #273642;
+            background: #263642;
+        }
+
+
+        .new-chat-button:active {
+            transform: scale(0.98);
         }
 
 
@@ -224,9 +279,20 @@
 
             background: #19232c;
 
+            border:
+                1px solid transparent;
+
             border-radius: 9px;
 
             color: #73808d;
+
+            transition:
+                border 0.2s ease;
+        }
+
+
+        .history-search:focus-within {
+            border-color: #34556d;
         }
 
 
@@ -253,6 +319,8 @@
 
         .history-list {
             flex: 1;
+
+            min-height: 0;
 
             overflow-y: auto;
 
@@ -287,6 +355,9 @@
             cursor: pointer;
 
             color: #c4cdd5;
+
+            transition:
+                background 0.2s ease;
         }
 
 
@@ -296,7 +367,12 @@
 
 
         .history-item.active {
-            background: #233441;
+            background:
+                linear-gradient(
+                    90deg,
+                    #233846,
+                    #20313d
+                );
         }
 
 
@@ -346,7 +422,7 @@
             padding: 10px;
 
             border-top:
-                1px solid #27323d;
+                1px solid #27333f;
         }
 
 
@@ -370,6 +446,9 @@
             gap: 10px;
 
             cursor: pointer;
+
+            transition:
+                background 0.2s ease;
         }
 
 
@@ -388,12 +467,16 @@
             flex: 1;
 
             min-width: 0;
+            min-height: 0;
 
             height: 100vh;
+            height: 100dvh;
 
             display: flex;
 
             flex-direction: column;
+
+            position: relative;
         }
 
 
@@ -404,6 +487,8 @@
         .oma-header {
             height: 75px;
 
+            min-height: 75px;
+
             flex-shrink: 0;
 
             padding:
@@ -413,10 +498,17 @@
             align-items: center;
             justify-content: space-between;
 
-            background: #111820;
+            background:
+                rgba(17, 24, 32, 0.94);
 
             border-bottom:
-                1px solid #27323d;
+                1px solid #27333f;
+
+            position: relative;
+
+            z-index: 100;
+
+            backdrop-filter: blur(14px);
         }
 
 
@@ -425,6 +517,8 @@
             align-items: center;
 
             gap: 11px;
+
+            min-width: 0;
         }
 
 
@@ -432,6 +526,8 @@
             margin: 0;
 
             font-size: 22px;
+
+            letter-spacing: 0.2px;
         }
 
 
@@ -448,6 +544,8 @@
             width: 48px;
             height: 48px;
 
+            flex-shrink: 0;
+
             border-radius: 50%;
 
             overflow: hidden;
@@ -456,6 +554,9 @@
 
             border:
                 1px solid #354451;
+
+            box-shadow:
+                0 0 20px rgba(52, 127, 189, 0.08);
         }
 
 
@@ -471,7 +572,9 @@
             display: flex;
             align-items: center;
 
-            gap: 12px;
+            gap: 10px;
+
+            flex-shrink: 0;
         }
 
 
@@ -494,11 +597,17 @@
             border-radius: 50%;
 
             background: #e04d4d;
+
+            box-shadow:
+                0 0 0 3px rgba(224, 77, 77, 0.08);
         }
 
 
         .status-dot.online {
             background: #38c978;
+
+            box-shadow:
+                0 0 0 3px rgba(56, 201, 120, 0.10);
         }
 
 
@@ -519,11 +628,20 @@
             justify-content: center;
 
             cursor: pointer;
+
+            transition:
+                background 0.2s ease,
+                transform 0.15s ease;
         }
 
 
         .header-button:hover {
             background: #293743;
+        }
+
+
+        .header-button:active {
+            transform: scale(0.95);
         }
 
 
@@ -539,7 +657,9 @@
             overflow-y: auto;
 
             padding:
-                25px 20px;
+                25px 20px 30px;
+
+            scroll-behavior: smooth;
         }
 
 
@@ -549,6 +669,8 @@
             max-width: 900px;
 
             margin: auto;
+
+            padding-bottom: 10px;
         }
 
 
@@ -573,6 +695,8 @@
             margin-top: 10px;
 
             font-size: 30px;
+
+            letter-spacing: -0.4px;
         }
 
 
@@ -608,7 +732,12 @@
             border:
                 1px solid #2c3944;
 
-            background: #141d25;
+            background:
+                linear-gradient(
+                    180deg,
+                    #151f28,
+                    #121b23
+                );
 
             border-radius: 12px;
 
@@ -616,7 +745,8 @@
 
             cursor: pointer;
 
-            transition: 0.2s;
+            transition:
+                0.2s ease;
         }
 
 
@@ -627,6 +757,13 @@
                 translateY(-2px);
 
             color: white;
+
+            border-color: #3b4e5d;
+        }
+
+
+        .quick-action:active {
+            transform: translateY(0);
         }
 
 
@@ -654,6 +791,24 @@
             gap: 12px;
 
             margin-bottom: 24px;
+
+            animation:
+                messageAppear 0.18s ease-out;
+        }
+
+
+        @keyframes messageAppear {
+
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
         }
 
 
@@ -672,11 +827,16 @@
             background: #202c37;
 
             font-weight: bold;
+
+            border:
+                1px solid #33424f;
         }
 
 
         .message-body {
             max-width: 78%;
+
+            min-width: 0;
         }
 
 
@@ -693,14 +853,22 @@
 
         .message-time {
             color: #65727e;
+
             font-size: 10px;
+
             margin-left: 6px;
+
             font-weight: normal;
         }
 
 
         .message-text {
-            background: #19232d;
+            background:
+                linear-gradient(
+                    180deg,
+                    #1b2630,
+                    #18222b
+                );
 
             padding:
                 12px 15px;
@@ -710,6 +878,11 @@
             line-height: 1.55;
 
             white-space: pre-wrap;
+
+            overflow-wrap: anywhere;
+
+            border:
+                1px solid #263540;
         }
 
 
@@ -727,11 +900,20 @@
             order: 2;
 
             background: #28628f;
+
+            border-color: #3978a5;
         }
 
 
         .user-message .message-text {
-            background: #24577f;
+            background:
+                linear-gradient(
+                    180deg,
+                    #285f87,
+                    #24577f
+                );
+
+            border-color: #32729d;
         }
 
 
@@ -744,6 +926,180 @@
             border-radius: 12px;
 
             margin-top: 8px;
+
+            border:
+                1px solid #344450;
+        }
+
+
+        /* =================================================
+           COPY AREA
+        ================================================= */
+
+        .message-tools {
+            display: flex;
+
+            align-items: center;
+
+            margin-top: 5px;
+
+            gap: 5px;
+        }
+
+
+        .copy-button {
+            border: none;
+
+            background: transparent;
+
+            color: #697782;
+
+            padding: 4px 7px;
+
+            border-radius: 6px;
+
+            font-size: 11px;
+
+            cursor: pointer;
+
+            display: inline-flex;
+            align-items: center;
+
+            gap: 5px;
+
+            transition:
+                background 0.2s ease,
+                color 0.2s ease;
+        }
+
+
+        .copy-button:hover {
+            background: #1d2933;
+
+            color: #d6dde3;
+        }
+
+
+        .copy-button.copied {
+            color: #53c98a;
+        }
+
+
+        /* =================================================
+           THINKING ANIMATION
+        ================================================= */
+
+        .thinking-message {
+            display: flex;
+
+            align-items: flex-start;
+
+            gap: 12px;
+
+            margin-bottom: 24px;
+
+            animation:
+                messageAppear 0.2s ease-out;
+        }
+
+
+        .thinking-avatar {
+            width: 38px;
+            height: 38px;
+
+            min-width: 38px;
+
+            border-radius: 50%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #202c37;
+
+            border:
+                1px solid #33424f;
+        }
+
+
+        .thinking-body {
+            display: flex;
+            flex-direction: column;
+
+            gap: 5px;
+        }
+
+
+        .thinking-name {
+            color: #84919d;
+
+            font-size: 11px;
+        }
+
+
+        .thinking-bubble {
+            display: flex;
+
+            align-items: center;
+
+            gap: 5px;
+
+            padding:
+                13px 16px;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #1b2630,
+                    #18222b
+                );
+
+            border:
+                1px solid #263540;
+
+            border-radius: 13px;
+        }
+
+
+        .thinking-dot {
+            width: 6px;
+            height: 6px;
+
+            border-radius: 50%;
+
+            background: #8d9aa5;
+
+            animation:
+                thinkingBounce 1.3s infinite ease-in-out;
+        }
+
+
+        .thinking-dot:nth-child(2) {
+            animation-delay: 0.15s;
+        }
+
+
+        .thinking-dot:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+
+        @keyframes thinkingBounce {
+
+            0%,
+            60%,
+            100% {
+                transform: translateY(0);
+
+                opacity: 0.45;
+            }
+
+            30% {
+                transform: translateY(-4px);
+
+                opacity: 1;
+            }
+
         }
 
 
@@ -755,12 +1111,20 @@
             flex-shrink: 0;
 
             padding:
-                10px 20px 14px;
+                10px 20px
+                calc(14px + env(safe-area-inset-bottom));
 
-            background: #111820;
+            background:
+                rgba(17, 24, 32, 0.97);
 
             border-top:
-                1px solid #27323d;
+                1px solid #27333f;
+
+            position: relative;
+
+            z-index: 90;
+
+            backdrop-filter: blur(14px);
         }
 
 
@@ -782,12 +1146,28 @@
 
             padding: 8px;
 
-            background: #19232c;
+            background:
+                linear-gradient(
+                    180deg,
+                    #1b2630,
+                    #18222b
+                );
 
             border:
                 1px solid #35424e;
 
             border-radius: 15px;
+
+            box-shadow:
+                0 8px 30px rgba(0,0,0,0.12);
+        }
+
+
+        .oma-input-box:focus-within {
+            border-color: #46718e;
+
+            box-shadow:
+                0 0 0 3px rgba(52, 127, 189, 0.08);
         }
 
 
@@ -821,6 +1201,8 @@
             width: 42px;
             height: 42px;
 
+            flex-shrink: 0;
+
             border: none;
 
             border-radius: 10px;
@@ -832,6 +1214,15 @@
             cursor: pointer;
 
             font-size: 17px;
+
+            transition:
+                background 0.2s ease,
+                transform 0.15s ease;
+        }
+
+
+        .input-button:active {
+            transform: scale(0.94);
         }
 
 
@@ -848,14 +1239,31 @@
 
 
         .send-button {
-            background: #347fbd;
+            background:
+                linear-gradient(
+                    180deg,
+                    #3b8bc9,
+                    #347fbd
+                );
 
             color: white;
+
+            box-shadow:
+                0 4px 14px rgba(52, 127, 189, 0.18);
         }
 
 
         .send-button:hover {
             background: #438dca;
+        }
+
+
+        .send-button:disabled {
+            opacity: 0.5;
+
+            cursor: not-allowed;
+
+            box-shadow: none;
         }
 
 
@@ -871,6 +1279,8 @@
             gap: 10px;
 
             margin-top: 7px;
+
+            min-height: 24px;
         }
 
 
@@ -887,6 +1297,12 @@
             font-size: 11px;
 
             cursor: pointer;
+
+            border:
+                1px solid transparent;
+
+            transition:
+                background 0.2s ease;
         }
 
 
@@ -904,6 +1320,12 @@
             color: #687681;
 
             font-size: 10px;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+
+            white-space: nowrap;
         }
 
 
@@ -917,6 +1339,8 @@
             color: #65727e;
 
             font-size: 10px;
+
+            min-height: 14px;
         }
 
 
@@ -939,6 +1363,9 @@
             background: #121a22;
 
             color: white;
+
+            border:
+                1px solid #2c3945;
         }
 
 
@@ -954,11 +1381,19 @@
         }
 
 
-        .oma-modal .form-control {
+        .oma-modal .form-control,
+        .oma-modal .form-select {
             background: #1b2630;
 
             border-color:
                 #35424e;
+
+            color: white;
+        }
+
+
+        .oma-modal .form-select option {
+            background: #1b2630;
 
             color: white;
         }
@@ -1000,6 +1435,9 @@
 
                 top: 0;
 
+                height: 100vh;
+                height: 100dvh;
+
                 transition:
                     left 0.25s ease;
             }
@@ -1015,21 +1453,34 @@
             }
 
 
+            .main-area {
+                width: 100%;
+
+                height: 100vh;
+                height: 100dvh;
+            }
+
+
             .oma-header {
+                height: 64px;
+
+                min-height: 64px;
+
                 padding:
-                    8px 12px;
+                    7px 10px;
             }
 
 
             .oma-chat {
                 padding:
-                    15px 10px;
+                    15px 10px 20px;
             }
 
 
             .oma-input-section {
                 padding:
-                    8px 10px;
+                    7px 10px
+                    calc(9px + env(safe-area-inset-bottom));
             }
 
 
@@ -1048,9 +1499,41 @@
             }
 
 
+            .connection-status {
+                gap: 4px;
+            }
+
+
+            .header-button {
+                width: 36px;
+                height: 36px;
+            }
+
+
             .quick-actions {
                 grid-template-columns:
                     repeat(2, 1fr);
+            }
+
+
+            .welcome {
+                padding:
+                    35px 10px 25px;
+            }
+
+
+            .welcome h2 {
+                font-size: 26px;
+            }
+
+
+            .quick-action {
+                min-height: 76px;
+            }
+
+
+            .attachment-bar {
+                margin-top: 5px;
             }
 
         }
@@ -1063,13 +1546,13 @@
         @media (max-width: 420px) {
 
             .oma-logo {
-                width: 42px;
-                height: 42px;
+                width: 40px;
+                height: 40px;
             }
 
 
             .header-left h1 {
-                font-size: 19px;
+                font-size: 18px;
             }
 
 
@@ -1080,7 +1563,110 @@
 
             .quick-action {
                 padding:
-                    12px 6px;
+                    11px 6px;
+
+                min-height: 70px;
+            }
+
+
+            .quick-action i {
+                font-size: 18px;
+            }
+
+
+            .message {
+                gap: 8px;
+
+                margin-bottom: 19px;
+            }
+
+
+            .message-avatar,
+            .thinking-avatar {
+                width: 34px;
+                height: 34px;
+
+                min-width: 34px;
+
+                font-size: 12px;
+            }
+
+
+            .message-body {
+                max-width: 88%;
+            }
+
+
+            .message-text {
+                padding:
+                    10px 12px;
+
+                font-size: 14px;
+            }
+
+
+            .oma-input-box {
+                padding: 6px;
+
+                border-radius: 13px;
+            }
+
+
+            .oma-textarea {
+                min-height: 40px;
+
+                padding:
+                    9px 7px;
+
+                font-size: 14px;
+            }
+
+
+            .input-button {
+                width: 40px;
+                height: 40px;
+            }
+
+
+            .oma-footer {
+                display: none;
+            }
+
+        }
+
+
+        /* =================================================
+           VERY SMALL PHONES
+        ================================================= */
+
+        @media (max-width: 350px) {
+
+            .oma-header {
+                padding:
+                    6px 7px;
+            }
+
+
+            .oma-chat {
+                padding-left: 7px;
+                padding-right: 7px;
+            }
+
+
+            .oma-input-section {
+                padding-left: 7px;
+                padding-right: 7px;
+            }
+
+
+            .connection-status {
+                display: none;
+            }
+
+
+            .quick-actions {
+                grid-template-columns:
+                    1fr 1fr;
             }
 
         }
@@ -1104,6 +1690,11 @@
             background: #293640;
 
             border-radius: 10px;
+        }
+
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #394957;
         }
 
     </style>
@@ -1147,6 +1738,7 @@
             <button
                 id="closeSidebar"
                 class="sidebar-icon-button"
+                aria-label="Close menu"
             >
 
                 <i class="bi bi-x-lg"></i>
@@ -1221,7 +1813,9 @@
     <div class="main-area">
 
 
-        <!-- HEADER -->
+        <!-- =================================================
+             HEADER
+        ================================================= -->
 
         <header class="oma-header">
 
@@ -1231,6 +1825,7 @@
                 <button
                     id="openSidebar"
                     class="header-button"
+                    aria-label="Open menu"
                 >
 
                     <i class="bi bi-list"></i>
@@ -1279,6 +1874,7 @@
                     class="header-button"
                     data-bs-toggle="modal"
                     data-bs-target="#settingsModal"
+                    aria-label="Settings"
                 >
 
                     <i class="bi bi-gear"></i>
@@ -1322,6 +1918,7 @@
                         id="micButton"
                         class="input-button mic-button"
                         title="Voice input"
+                        aria-label="Voice input"
                     >
 
                         <i class="bi bi-mic"></i>
@@ -1341,6 +1938,7 @@
                         id="sendButton"
                         class="input-button send-button"
                         title="Send message"
+                        aria-label="Send message"
                     >
 
                         <i class="bi bi-send-fill"></i>
@@ -1783,17 +2381,12 @@
 <script src="js/bootstrap.bundle.min.js"></script>
 
 
-
-
 <script>
+
 /* =========================================================
    OMA WEBSITE - COMPLETE JAVASCRIPT
    ========================================================= */
 
-
-/* =========================================================
-   STARTUP TEST
-   ========================================================= */
 
 console.log("======================================");
 console.log("OMA JAVASCRIPT IS RUNNING");
@@ -1839,6 +2432,8 @@ let alarmInterval = null;
 let recognition = null;
 
 let isListening = false;
+
+let thinkingElement = null;
 
 
 /* =========================================================
@@ -1959,9 +2554,11 @@ async function checkBackend() {
     );
 
 
-    if (!statusText ||
+    if (
+        !statusText ||
         !statusDot ||
-        !omaStatus) {
+        !omaStatus
+    ) {
 
         console.error(
             "OMA: Status elements are missing."
@@ -1975,9 +2572,11 @@ async function checkBackend() {
     statusText.textContent =
         "Checking...";
 
+
     statusDot.classList.remove(
         "online"
     );
+
 
     omaStatus.textContent =
         "Checking OMA cloud...";
@@ -2071,19 +2670,6 @@ async function checkBackend() {
                 "OMA cloud connected";
 
 
-            console.log(
-                "======================================"
-            );
-
-            console.log(
-                "OMA CLOUD CONNECTION SUCCESSFUL"
-            );
-
-            console.log(
-                "======================================"
-            );
-
-
         } else {
 
             throw new Error(
@@ -2170,12 +2756,6 @@ function loadHistory() {
 
             }
 
-
-            console.log(
-                "OMA: Loaded conversations:",
-                conversations.length
-            );
-
         }
 
         catch (error) {
@@ -2212,11 +2792,6 @@ function loadHistory() {
 
 
     renderHistory();
-
-
-    console.log(
-        "OMA: HISTORY LOADED"
-    );
 
 }
 
@@ -2308,11 +2883,6 @@ function createNewChat() {
 
     closeSidebar();
 
-
-    console.log(
-        "OMA: New chat created."
-    );
-
 }
 
 
@@ -2355,11 +2925,6 @@ function openConversation(id) {
 
 
     if (!chat) {
-
-        console.warn(
-            "OMA: Conversation not found:",
-            id
-        );
 
         return;
 
@@ -2626,7 +3191,6 @@ function showWelcome() {
 
             <div class="quick-actions">
 
-
                 <button
                     class="quick-action"
                     id="homeworkQuickButton"
@@ -2709,7 +3273,6 @@ function showWelcome() {
                     </span>
 
                 </button>
-
 
             </div>
 
@@ -2845,10 +3408,6 @@ function addMessage(
 
 
     if (!chat) {
-
-        console.error(
-            "OMA: No current chat."
-        );
 
         return;
 
@@ -3060,6 +3619,106 @@ function renderMessage(message) {
     }
 
 
+    /* =====================================================
+       COPY BUTTON FOR OMA
+    ====================================================== */
+
+    if (
+        message.sender === "oma" &&
+        message.text
+    ) {
+
+        const tools =
+            document.createElement(
+                "div"
+            );
+
+
+        tools.className =
+            "message-tools";
+
+
+        const copyButton =
+            document.createElement(
+                "button"
+            );
+
+
+        copyButton.className =
+            "copy-button";
+
+
+        copyButton.type =
+            "button";
+
+
+        copyButton.innerHTML =
+            '<i class="bi bi-copy"></i><span>Copy</span>';
+
+
+        copyButton.onclick =
+            async function() {
+
+                try {
+
+                    await navigator.clipboard.writeText(
+                        message.text
+                    );
+
+
+                    copyButton.classList.add(
+                        "copied"
+                    );
+
+
+                    copyButton.innerHTML =
+                        '<i class="bi bi-check2"></i><span>Copied</span>';
+
+
+                    setTimeout(
+                        function() {
+
+                            copyButton.classList.remove(
+                                "copied"
+                            );
+
+
+                            copyButton.innerHTML =
+                                '<i class="bi bi-copy"></i><span>Copy</span>';
+
+                        },
+                        1500
+                    );
+
+                }
+
+                catch (error) {
+
+                    console.error(
+                        "OMA: Copy failed:",
+                        error
+                    );
+
+                    copyButton.innerHTML =
+                        '<i class="bi bi-x"></i><span>Failed</span>';
+
+                }
+
+            };
+
+
+        tools.appendChild(
+            copyButton
+        );
+
+
+        body.appendChild(
+            tools
+        );
+
+    }
+
+
     wrapper.appendChild(
         avatar
     );
@@ -3073,6 +3732,76 @@ function renderMessage(message) {
     messages.appendChild(
         wrapper
     );
+
+}
+
+
+/* =========================================================
+   THINKING ANIMATION
+   ========================================================= */
+
+function showThinking() {
+
+    removeThinking();
+
+
+    thinkingElement =
+        document.createElement(
+            "div"
+        );
+
+
+    thinkingElement.className =
+        "thinking-message";
+
+
+    thinkingElement.innerHTML = `
+
+        <div class="thinking-avatar">
+            O
+        </div>
+
+        <div class="thinking-body">
+
+            <span class="thinking-name">
+                OMA
+            </span>
+
+            <div class="thinking-bubble">
+
+                <span class="thinking-dot"></span>
+
+                <span class="thinking-dot"></span>
+
+                <span class="thinking-dot"></span>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    messages.appendChild(
+        thinkingElement
+    );
+
+
+    scrollBottom();
+
+}
+
+
+function removeThinking() {
+
+    if (thinkingElement) {
+
+        thinkingElement.remove();
+
+        thinkingElement =
+            null;
+
+    }
 
 }
 
@@ -3196,6 +3925,11 @@ async function finishSending(
         true;
 
 
+    /* SHOW THINKING ANIMATION */
+
+    showThinking();
+
+
     try {
 
         console.log(
@@ -3278,6 +4012,11 @@ async function finishSending(
         }
 
 
+        /* REMOVE THINKING BEFORE RESPONSE */
+
+        removeThinking();
+
+
         addMessage(
             "oma",
             omaReply
@@ -3300,6 +4039,9 @@ async function finishSending(
             "OMA: Chat backend error:",
             error
         );
+
+
+        removeThinking();
 
 
         addMessage(
@@ -3972,10 +4714,6 @@ function openAlarm() {
 
     if (!modalElement) {
 
-        console.error(
-            "OMA: Alarm modal not found."
-        );
-
         return;
 
     }
@@ -4118,10 +4856,6 @@ function openTimer() {
 
 
     if (!modalElement) {
-
-        console.error(
-            "OMA: Timer modal not found."
-        );
 
         return;
 
@@ -4418,12 +5152,6 @@ function setupMicrophone() {
             omaStatus.textContent =
                 "Voice captured";
 
-
-            console.log(
-                "OMA: Voice transcript:",
-                transcript
-            );
-
         };
 
 
@@ -4620,9 +5348,11 @@ console.log(
     "======================================"
 );
 
+
 console.log(
     "OMA INITIALIZATION COMPLETE"
 );
+
 
 console.log(
     "======================================"
