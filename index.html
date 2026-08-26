@@ -3510,6 +3510,11 @@ html[data-theme="dark"] select:focus-visible {
 }
 </style>
 
+<!-- KaTeX math rendering -->
+<link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css"
+>
 
 </head>
 
@@ -4214,11 +4219,7 @@ html[data-theme="dark"] select:focus-visible {
 <script>
 
 /* =========================================================
-   OMA WEBSITE — CLEAN JAVASCRIPT
-   ========================================================= */
-
-/* =========================================================
-   STARTUP
+   OMA WEBSITE — JAVASCRIPT
    ========================================================= */
 
 console.log("======================================");
@@ -4239,7 +4240,6 @@ const OMA_HEALTH_ENDPOINT =
 const OMA_CHAT_ENDPOINT =
     `${OMA_BACKEND}/chat`;
 
-
 console.log("OMA backend:", OMA_BACKEND);
 
 
@@ -4250,7 +4250,6 @@ console.log("OMA backend:", OMA_BACKEND);
 let conversations = [];
 let currentConversationId = null;
 let conversationBeingRenamed = null;
-
 let selectedImage = null;
 
 let timerInterval = null;
@@ -4276,49 +4275,79 @@ const thinkingCopies = [
     "OMA is working on a response"
 ];
 
+
 /* =========================================================
    MARKDOWN
    ========================================================= */
 
-marked.setOptions({
+if (typeof marked !== "undefined") {
 
-    gfm: true,
+    marked.setOptions({
+        gfm: true,
+        breaks: true,
+        headerIds: false,
+        mangle: false
+    });
 
-    breaks: true,
+}
 
-    headerIds: false,
-
-    mangle: false
-
-});
 
 /* =========================================================
    ELEMENTS
    ========================================================= */
 
 const elements = {
-    messages: document.getElementById("messages"),
-    chatArea: document.getElementById("chatArea"),
-    messageInput: document.getElementById("messageInput"),
-    sendButton: document.getElementById("sendButton"),
 
-    imageUpload: document.getElementById("imageUpload"),
-    imageName: document.getElementById("imageName"),
+    messages:
+        document.getElementById("messages"),
 
-    historyList: document.getElementById("historyList"),
-    historySearch: document.getElementById("historySearch"),
-    historySidebar: document.getElementById("historySidebar"),
-    sidebarOverlay: document.getElementById("sidebarOverlay"),
+    chatArea:
+        document.getElementById("chatArea"),
 
-    openSidebarButton: document.getElementById("openSidebar"),
-    closeSidebarButton: document.getElementById("closeSidebar"),
-    newChatButton: document.getElementById("newChatButton"),
+    messageInput:
+        document.getElementById("messageInput"),
 
-    statusText: document.getElementById("statusText"),
-    statusDot: document.getElementById("statusDot"),
-    omaStatus: document.getElementById("omaStatus"),
+    sendButton:
+        document.getElementById("sendButton"),
 
-    micButton: document.getElementById("micButton"),
+    imageUpload:
+        document.getElementById("imageUpload"),
+
+    imageName:
+        document.getElementById("imageName"),
+
+    historyList:
+        document.getElementById("historyList"),
+
+    historySearch:
+        document.getElementById("historySearch"),
+
+    historySidebar:
+        document.getElementById("historySidebar"),
+
+    sidebarOverlay:
+        document.getElementById("sidebarOverlay"),
+
+    openSidebarButton:
+        document.getElementById("openSidebar"),
+
+    closeSidebarButton:
+        document.getElementById("closeSidebar"),
+
+    newChatButton:
+        document.getElementById("newChatButton"),
+
+    statusText:
+        document.getElementById("statusText"),
+
+    statusDot:
+        document.getElementById("statusDot"),
+
+    omaStatus:
+        document.getElementById("omaStatus"),
+
+    micButton:
+        document.getElementById("micButton"),
 
     appearanceSelect:
         document.getElementById("appearanceSelect"),
@@ -4328,6 +4357,7 @@ const elements = {
 
     saveRenameButton:
         document.getElementById("saveRenameButton")
+
 };
 
 
@@ -4341,9 +4371,11 @@ Object.entries(elements).forEach(
     ([name, element]) => {
 
         if (!element) {
+
             console.warn(
                 `OMA: Optional/missing element: ${name}`
             );
+
         }
 
     }
@@ -4351,17 +4383,23 @@ Object.entries(elements).forEach(
 
 
 /* =========================================================
-   SMALL HELPERS
+   STATUS
    ========================================================= */
 
 function setOMAStatus(text) {
 
     if (elements.omaStatus) {
+
         elements.omaStatus.textContent = text;
+
     }
 
 }
 
+
+/* =========================================================
+   SCROLL
+   ========================================================= */
 
 function scrollBottom() {
 
@@ -4380,7 +4418,7 @@ function scrollBottom() {
 
 
 /* =========================================================
-   THEME SYSTEM
+   THEME
    ========================================================= */
 
 function getSavedTheme() {
@@ -4424,26 +4462,19 @@ function applyTheme(
             ? getSystemTheme()
             : selectedTheme;
 
-
-    /*
-       Smooth transition is handled by the
-       CSS .theme-changing class.
-    */
-
-    html.classList.add("theme-changing");
-
+    html.classList.add(
+        "theme-changing"
+    );
 
     html.setAttribute(
         "data-theme",
         actualTheme
     );
 
-
     html.setAttribute(
         "data-theme-preference",
         selectedTheme
     );
-
 
     if (save) {
 
@@ -4454,14 +4485,12 @@ function applyTheme(
 
     }
 
-
     if (elements.appearanceSelect) {
 
         elements.appearanceSelect.value =
             selectedTheme;
 
     }
-
 
     window.setTimeout(() => {
 
@@ -4471,14 +4500,6 @@ function applyTheme(
 
     }, 350);
 
-
-    console.log(
-        "OMA theme:",
-        selectedTheme,
-        "=>",
-        actualTheme
-    );
-
 }
 
 
@@ -4487,14 +4508,10 @@ function initializeTheme() {
     const savedTheme =
         getSavedTheme();
 
-
     applyTheme(
         savedTheme,
         false
     );
-
-
-    /* Appearance selector */
 
     if (elements.appearanceSelect) {
 
@@ -4505,12 +4522,10 @@ function initializeTheme() {
                 const selectedTheme =
                     elements.appearanceSelect.value;
 
-
                 applyTheme(
                     selectedTheme,
                     true
                 );
-
 
                 setOMAStatus(
                     `Theme changed to ${selectedTheme}`
@@ -4521,16 +4536,12 @@ function initializeTheme() {
 
     }
 
-
-    /* System theme changes */
-
     if (window.matchMedia) {
 
         const mediaQuery =
             window.matchMedia(
                 "(prefers-color-scheme: light)"
             );
-
 
         const handleSystemThemeChange =
             () => {
@@ -4539,7 +4550,6 @@ function initializeTheme() {
                     localStorage.getItem(
                         "omaTheme"
                     );
-
 
                 if (
                     preference === "system"
@@ -4554,7 +4564,6 @@ function initializeTheme() {
 
             };
 
-
         if (
             mediaQuery.addEventListener
         ) {
@@ -4565,7 +4574,6 @@ function initializeTheme() {
             );
 
         }
-
         else if (
             mediaQuery.addListener
         ) {
@@ -4591,12 +4599,12 @@ async function checkBackend() {
         "OMA: Starting backend health check..."
     );
 
-
     if (elements.statusText) {
+
         elements.statusText.textContent =
             "Checking...";
-    }
 
+    }
 
     if (elements.statusDot) {
 
@@ -4606,22 +4614,18 @@ async function checkBackend() {
 
     }
 
-
     setOMAStatus(
         "Checking OMA cloud..."
     );
 
-
     const controller =
         new AbortController();
-
 
     const timeout =
         setTimeout(
             () => controller.abort(),
             60000
         );
-
 
     try {
 
@@ -4635,9 +4639,7 @@ async function checkBackend() {
                 }
             );
 
-
         clearTimeout(timeout);
-
 
         if (!response.ok) {
 
@@ -4647,14 +4649,15 @@ async function checkBackend() {
 
         }
 
-
         const data =
             await response.json();
 
-
         if (
             data &&
-            data.status === "healthy"
+            (
+                data.status === "healthy" ||
+                data.status === "online"
+            )
         ) {
 
             if (elements.statusText) {
@@ -4664,7 +4667,6 @@ async function checkBackend() {
 
             }
 
-
             if (elements.statusDot) {
 
                 elements.statusDot.classList.add(
@@ -4673,18 +4675,15 @@ async function checkBackend() {
 
             }
 
-
             setOMAStatus(
                 "OMA cloud connected"
             );
-
 
             console.log(
                 "OMA CLOUD CONNECTION SUCCESSFUL"
             );
 
         }
-
         else {
 
             throw new Error(
@@ -4694,17 +4693,14 @@ async function checkBackend() {
         }
 
     }
-
     catch (error) {
 
         clearTimeout(timeout);
-
 
         console.error(
             "OMA: Backend health check failed:",
             error
         );
-
 
         if (elements.statusText) {
 
@@ -4713,7 +4709,6 @@ async function checkBackend() {
 
         }
 
-
         if (elements.statusDot) {
 
             elements.statusDot.classList.remove(
@@ -4721,7 +4716,6 @@ async function checkBackend() {
             );
 
         }
-
 
         if (
             error.name === "AbortError"
@@ -4732,7 +4726,6 @@ async function checkBackend() {
             );
 
         }
-
         else {
 
             setOMAStatus(
@@ -4747,7 +4740,7 @@ async function checkBackend() {
 
 
 /* =========================================================
-   HISTORY STORAGE
+   HISTORY
    ========================================================= */
 
 function loadHistory() {
@@ -4757,7 +4750,6 @@ function loadHistory() {
             "omaConversations"
         );
 
-
     if (saved) {
 
         try {
@@ -4765,14 +4757,12 @@ function loadHistory() {
             const parsed =
                 JSON.parse(saved);
 
-
             conversations =
                 Array.isArray(parsed)
                     ? parsed
                     : [];
 
         }
-
         catch (error) {
 
             console.error(
@@ -4780,13 +4770,11 @@ function loadHistory() {
                 error
             );
 
-
             conversations = [];
 
         }
 
     }
-
 
     if (conversations.length > 0) {
 
@@ -4796,13 +4784,11 @@ function loadHistory() {
         renderConversation();
 
     }
-
     else {
 
         createNewChat();
 
     }
-
 
     renderHistory();
 
@@ -4820,7 +4806,6 @@ function saveHistory() {
 
     }
 
-
     try {
 
         localStorage.setItem(
@@ -4831,7 +4816,6 @@ function saveHistory() {
         );
 
     }
-
     catch (error) {
 
         console.error(
@@ -4853,7 +4837,6 @@ function createNewChat() {
     const now =
         new Date().toISOString();
 
-
     const chat = {
 
         id:
@@ -4872,15 +4855,15 @@ function createNewChat() {
 
     };
 
-
     conversations.unshift(chat);
 
     currentConversationId =
         chat.id;
 
-
     saveHistory();
+
     renderHistory();
+
     renderConversation();
 
     closeSidebar();
@@ -4907,17 +4890,17 @@ function openConversation(id) {
                 item.id === id
         );
 
-
     if (!chat) {
-        return;
-    }
 
+        return;
+
+    }
 
     currentConversationId =
         id;
 
-
     renderConversation();
+
     renderHistory();
 
     closeSidebar();
@@ -4926,24 +4909,25 @@ function openConversation(id) {
 
 
 /* =========================================================
-   DATE / TIME FORMATTING
+   DATE / TIME
    ========================================================= */
 
 function formatMessageTime(timestamp) {
 
     if (!timestamp) {
-        return "";
-    }
 
+        return "";
+
+    }
 
     const date =
         new Date(timestamp);
 
-
     if (isNaN(date.getTime())) {
-        return "";
-    }
 
+        return "";
+
+    }
 
     return date.toLocaleTimeString(
         [],
@@ -4959,31 +4943,29 @@ function formatMessageTime(timestamp) {
 function formatMessageDate(timestamp) {
 
     if (!timestamp) {
-        return "";
-    }
 
+        return "";
+
+    }
 
     const date =
         new Date(timestamp);
 
-
     if (isNaN(date.getTime())) {
-        return "";
-    }
 
+        return "";
+
+    }
 
     const today =
         new Date();
 
-
     const yesterday =
         new Date();
-
 
     yesterday.setDate(
         yesterday.getDate() - 1
     );
-
 
     if (
         date.toDateString() ===
@@ -4994,7 +4976,6 @@ function formatMessageDate(timestamp) {
 
     }
 
-
     if (
         date.toDateString() ===
         yesterday.toDateString()
@@ -5003,7 +4984,6 @@ function formatMessageDate(timestamp) {
         return "Yesterday";
 
     }
-
 
     return date.toLocaleDateString(
         [],
@@ -5024,17 +5004,16 @@ function formatMessageDate(timestamp) {
 function renderConversation() {
 
     if (!elements.messages) {
-        return;
-    }
 
+        return;
+
+    }
 
     const chat =
         getCurrentChat();
 
-
     elements.messages.innerHTML =
         "";
-
 
     if (
         !chat ||
@@ -5048,9 +5027,7 @@ function renderConversation() {
 
     }
 
-
     let lastMessageDate = "";
-
 
     chat.messages.forEach(message => {
 
@@ -5059,39 +5036,34 @@ function renderConversation() {
                 message.time
             );
 
-
         if (
             messageDate &&
             messageDate !== lastMessageDate
         ) {
 
             const separator =
-                document.createElement("div");
-
+                document.createElement(
+                    "div"
+                );
 
             separator.className =
                 "message-date-separator";
 
-
             separator.textContent =
                 messageDate;
-
 
             elements.messages.appendChild(
                 separator
             );
-
 
             lastMessageDate =
                 messageDate;
 
         }
 
-
         renderMessage(message);
 
     });
-
 
     scrollBottom();
 
@@ -5099,15 +5071,16 @@ function renderConversation() {
 
 
 /* =========================================================
-   WELCOME SCREEN
+   WELCOME
    ========================================================= */
 
 function showWelcome() {
 
     if (!elements.messages) {
-        return;
-    }
 
+        return;
+
+    }
 
     elements.messages.innerHTML = `
 
@@ -5181,7 +5154,6 @@ function showWelcome() {
 
     `;
 
-
     document.getElementById(
         "homeworkQuickButton"
     )?.addEventListener(
@@ -5192,7 +5164,6 @@ function showWelcome() {
             )
     );
 
-
     document.getElementById(
         "timerQuickButton"
     )?.addEventListener(
@@ -5200,14 +5171,12 @@ function showWelcome() {
         openTimer
     );
 
-
     document.getElementById(
         "alarmQuickButton"
     )?.addEventListener(
         "click",
         openAlarm
     );
-
 
     document.getElementById(
         "explainQuickButton"
@@ -5219,7 +5188,6 @@ function showWelcome() {
             )
     );
 
-
     document.getElementById(
         "planQuickButton"
     )?.addEventListener(
@@ -5229,7 +5197,6 @@ function showWelcome() {
                 "Help me plan my day"
             )
     );
-
 
     document.getElementById(
         "imageQuickButton"
@@ -5246,7 +5213,7 @@ function showWelcome() {
 
 
 /* =========================================================
-   ADD MESSAGE TO HISTORY
+   ADD MESSAGE
    ========================================================= */
 
 function addMessage(
@@ -5258,34 +5225,29 @@ function addMessage(
     const chat =
         getCurrentChat();
 
-
     if (!chat) {
-        return;
-    }
 
+        return;
+
+    }
 
     const message = {
 
         sender,
+
         text,
+
         image,
+
         time:
             new Date().toISOString()
 
     };
 
-
     chat.messages.push(message);
-
 
     chat.updatedAt =
         message.time;
-
-
-    /*
-       Automatically create a useful title
-       from the user's first message.
-    */
 
     if (
         sender === "user" &&
@@ -5300,9 +5262,10 @@ function addMessage(
 
     }
 
-
     saveHistory();
+
     renderHistory();
+
     renderMessage(message);
 
     scrollBottom();
@@ -5317,17 +5280,16 @@ function addMessage(
 function renderMessage(message) {
 
     if (!elements.messages) {
-        return;
-    }
 
+        return;
+
+    }
 
     const wrapper =
         document.createElement("div");
 
-
     wrapper.className =
         "message";
-
 
     if (message.sender === "user") {
 
@@ -5337,52 +5299,41 @@ function renderMessage(message) {
 
     }
 
-const avatar =
-    document.createElement("div");
-
-
-
+    const avatar =
+        document.createElement("div");
 
     const body =
         document.createElement("div");
 
-
     body.className =
         "message-body";
 
-const name =
-    document.createElement("span");
+    const name =
+        document.createElement("span");
 
+    name.className =
+        "message-name";
 
-name.className =
-    "message-name";
-
-
-name.textContent =
-    message.sender === "user"
-        ? "You"
-        : "OMA";
-
+    name.textContent =
+        message.sender === "user"
+            ? "You"
+            : "OMA";
 
     const time =
         formatMessageTime(
             message.time
         );
 
-
     if (time) {
 
         const timeElement =
             document.createElement("span");
 
-
         timeElement.className =
             "message-time";
 
-
         timeElement.textContent =
             time;
-
 
         name.appendChild(
             timeElement
@@ -5391,78 +5342,146 @@ name.textContent =
     }
 
 
-  const text =
-    document.createElement("div");
+    /* =====================================================
+       MESSAGE TEXT
+       ===================================================== */
 
-text.className =
-    "message-text";
+    const text =
+        document.createElement("div");
 
-const messageContent =
-    message.text || "";
+    text.className =
+        "message-text";
 
-if (
-    typeof marked !== "undefined"
-) {
-
-    text.innerHTML =
-        marked.parse(
-            messageContent
-        );
-
-}
-
-else {
-
-    text.textContent =
-        messageContent;
-
-}
+    const messageContent =
+        message.text || "";
 
 
-/*
-   Remove unnecessary paragraph spacing
-   around normal Markdown messages.
-*/
+    /*
+       First render Markdown.
+    */
 
-text.querySelectorAll("p").forEach(
-    paragraph => {
+    if (
+        typeof marked !== "undefined"
+    ) {
 
-        paragraph.style.margin =
-            "0";
+        text.innerHTML =
+            marked.parse(
+                messageContent
+            );
 
     }
-);
+    else {
+
+        text.textContent =
+            messageContent;
+
+    }
 
 
-body.appendChild(name);
-body.appendChild(text);
+    /*
+       Render LaTeX using KaTeX if available.
+    */
 
-    /* Image */
+    if (
+        typeof renderMathInElement !== "undefined"
+    ) {
+
+        try {
+
+            renderMathInElement(
+                text,
+                {
+                    delimiters: [
+
+                        {
+                            left: "$$",
+                            right: "$$",
+                            display: true
+                        },
+
+                        {
+                            left: "\\[",
+                            right: "\\]",
+                            display: true
+                        },
+
+                        {
+                            left: "\\(",
+                            right: "\\)",
+                            display: false
+                        },
+
+                        {
+                            left: "$",
+                            right: "$",
+                            display: false
+                        }
+
+                    ],
+
+                    throwOnError: false
+
+                }
+            );
+
+        }
+        catch (error) {
+
+            console.warn(
+                "OMA: Math rendering failed:",
+                error
+            );
+
+        }
+
+    }
+
+
+    /*
+       Remove unnecessary paragraph spacing.
+    */
+
+    text.querySelectorAll("p").forEach(
+        paragraph => {
+
+            paragraph.style.margin =
+                "0";
+
+        }
+    );
+
+
+    body.appendChild(name);
+
+    body.appendChild(text);
+
+
+    /* =====================================================
+       IMAGE
+       ===================================================== */
 
     if (message.image) {
 
         const image =
             document.createElement("img");
 
-
         image.src =
             message.image;
-
 
         image.className =
             "uploaded-image";
 
-
         image.alt =
             "Uploaded image";
-
 
         body.appendChild(image);
 
     }
 
 
-    /* Copy button for OMA */
+    /* =====================================================
+       COPY BUTTON
+       ===================================================== */
 
     if (
         message.sender === "oma" &&
@@ -5479,6 +5498,7 @@ body.appendChild(text);
 
 
     wrapper.appendChild(avatar);
+
     wrapper.appendChild(body);
 
     elements.messages.appendChild(
@@ -5497,36 +5517,28 @@ function createCopyButton(text) {
     const actions =
         document.createElement("div");
 
-
     actions.className =
         "message-actions";
-
 
     const button =
         document.createElement("button");
 
-
     button.className =
         "message-action-button";
-
 
     button.type =
         "button";
 
-
     button.title =
         "Copy response";
-
 
     button.setAttribute(
         "aria-label",
         "Copy response"
     );
 
-
     button.innerHTML =
         '<i class="bi bi-copy"></i>';
-
 
     button.addEventListener(
         "click",
@@ -5535,21 +5547,17 @@ function createCopyButton(text) {
             const success =
                 await copyText(text);
 
-
             if (success) {
 
                 button.innerHTML =
                     '<i class="bi bi-check-lg"></i>';
 
-
                 button.title =
                     "Copied!";
-
 
                 button.classList.add(
                     "copied"
                 );
-
 
                 setTimeout(
                     () => {
@@ -5572,7 +5580,6 @@ function createCopyButton(text) {
 
         }
     );
-
 
     actions.appendChild(button);
 
@@ -5598,49 +5605,40 @@ async function copyText(text) {
 
         }
 
-
         throw new Error(
             "Clipboard API unavailable"
         );
 
     }
-
     catch (error) {
 
         console.warn(
             "OMA: Using clipboard fallback"
         );
 
-
         const textarea =
             document.createElement(
                 "textarea"
             );
 
-
         textarea.value =
             text;
-
 
         textarea.style.position =
             "fixed";
 
-
         textarea.style.opacity =
             "0";
-
 
         document.body.appendChild(
             textarea
         );
 
-
         textarea.focus();
+
         textarea.select();
 
-
         let success = false;
-
 
         try {
 
@@ -5650,7 +5648,6 @@ async function copyText(text) {
                 );
 
         }
-
         catch (fallbackError) {
 
             console.error(
@@ -5660,9 +5657,7 @@ async function copyText(text) {
 
         }
 
-
         textarea.remove();
-
 
         return success;
 
@@ -5679,32 +5674,25 @@ function showThinkingMessage() {
 
     removeThinkingMessage();
 
-
     thinkingCopyIndex =
         Math.floor(
             Math.random() *
             thinkingCopies.length
         );
 
-
     const wrapper =
         document.createElement("div");
-
 
     wrapper.id =
         "thinkingMessage";
 
-
     wrapper.className =
         "thinking-message";
-
 
     wrapper.innerHTML = `
 
         <div class="thinking-avatar thinking-pulse">
-
             <i class="bi bi-stars"></i>
-
         </div>
 
         <div class="thinking-body">
@@ -5736,14 +5724,11 @@ function showThinkingMessage() {
 
     `;
 
-
     elements.messages?.appendChild(
         wrapper
     );
 
-
     scrollBottom();
-
 
     thinkingInterval =
         setInterval(
@@ -5754,11 +5739,11 @@ function showThinkingMessage() {
                         "thinkingCopy"
                     );
 
-
                 if (!copy) {
-                    return;
-                }
 
+                    return;
+
+                }
 
                 thinkingCopyIndex =
                     (
@@ -5766,11 +5751,9 @@ function showThinkingMessage() {
                     ) %
                     thinkingCopies.length;
 
-
                 copy.classList.add(
                     "changing"
                 );
-
 
                 setTimeout(
                     () => {
@@ -5779,7 +5762,6 @@ function showThinkingMessage() {
                             thinkingCopies[
                                 thinkingCopyIndex
                             ];
-
 
                         copy.classList.remove(
                             "changing"
@@ -5804,12 +5786,10 @@ function removeThinkingMessage() {
             thinkingInterval
         );
 
-
         thinkingInterval =
             null;
 
     }
-
 
     document.getElementById(
         "thinkingMessage"
@@ -5832,11 +5812,9 @@ function sendMessage() {
 
     }
 
-
     const text =
         elements.messageInput?.value
             .trim() || "";
-
 
     if (
         !text &&
@@ -5847,12 +5825,10 @@ function sendMessage() {
 
     }
 
-
     if (selectedImage) {
 
         const reader =
             new FileReader();
-
 
         reader.onload =
             event => {
@@ -5864,7 +5840,6 @@ function sendMessage() {
 
             };
 
-
         reader.onerror =
             error => {
 
@@ -5873,20 +5848,17 @@ function sendMessage() {
                     error
                 );
 
-
                 setOMAStatus(
                     "Could not read image"
                 );
 
             };
 
-
         reader.readAsDataURL(
             selectedImage
         );
 
     }
-
     else {
 
         finishSending(
@@ -5912,33 +5884,27 @@ async function finishSending(
         "OMA: Sending message..."
     );
 
-
     addMessage(
         "user",
         text || "Image",
         image
     );
 
-
     if (elements.messageInput) {
 
         elements.messageInput.value =
             "";
-
 
         elements.messageInput.style.height =
             "auto";
 
     }
 
-
     clearImage();
-
 
     setOMAStatus(
         "OMA is thinking..."
     );
-
 
     if (elements.sendButton) {
 
@@ -5947,20 +5913,9 @@ async function finishSending(
 
     }
 
-
     showThinkingMessage();
 
-
     try {
-
-        /*
-           IMPORTANT:
-           The current backend accepts the text
-           message. The image is still stored in
-           the conversation UI, but is not yet sent
-           to the backend because your current
-           /chat endpoint expects JSON text.
-        */
 
         const requestBody = {
 
@@ -5970,12 +5925,10 @@ async function finishSending(
 
         };
 
-
         const response =
             await fetch(
                 OMA_CHAT_ENDPOINT,
                 {
-
                     method: "POST",
 
                     headers: {
@@ -5987,10 +5940,8 @@ async function finishSending(
                         JSON.stringify(
                             requestBody
                         )
-
                 }
             );
-
 
         if (!response.ok) {
 
@@ -6000,17 +5951,14 @@ async function finishSending(
 
         }
 
-
         const data =
             await response.json();
-
 
         const omaReply =
             data.response ||
             data.message ||
             data.reply ||
             data.answer;
-
 
         if (!omaReply) {
 
@@ -6020,27 +5968,22 @@ async function finishSending(
 
         }
 
-
         removeThinkingMessage();
-
 
         addMessage(
             "oma",
             omaReply
         );
 
-
         setOMAStatus(
             "OMA is ready"
         );
-
 
         console.log(
             "OMA: Message successfully received."
         );
 
     }
-
     catch (error) {
 
         console.error(
@@ -6048,22 +5991,18 @@ async function finishSending(
             error
         );
 
-
         removeThinkingMessage();
-
 
         addMessage(
             "oma",
             "I couldn't reach the OMA cloud backend right now."
         );
 
-
         setOMAStatus(
             "Backend connection error"
         );
 
     }
-
     finally {
 
         if (elements.sendButton) {
@@ -6085,18 +6024,17 @@ async function finishSending(
 function quickMessage(text) {
 
     if (!elements.messageInput) {
-        return;
-    }
 
+        return;
+
+    }
 
     elements.messageInput.value =
         text;
 
-
     elements.messageInput.dispatchEvent(
         new Event("input")
     );
-
 
     sendMessage();
 
@@ -6112,7 +6050,6 @@ function handleImageUpload() {
     const input =
         elements.imageUpload;
 
-
     if (
         !input ||
         !input.files ||
@@ -6123,10 +6060,8 @@ function handleImageUpload() {
 
     }
 
-
     selectedImage =
         input.files[0];
-
 
     if (elements.imageName) {
 
@@ -6134,7 +6069,6 @@ function handleImageUpload() {
             selectedImage.name;
 
     }
-
 
     setOMAStatus(
         "Image selected"
@@ -6148,14 +6082,12 @@ function clearImage() {
     selectedImage =
         null;
 
-
     if (elements.imageUpload) {
 
         elements.imageUpload.value =
             "";
 
     }
-
 
     if (elements.imageName) {
 
@@ -6174,20 +6106,19 @@ function clearImage() {
 function renderHistory() {
 
     if (!elements.historyList) {
-        return;
-    }
 
+        return;
+
+    }
 
     elements.historyList.innerHTML =
         "";
-
 
     const search =
         elements.historySearch
             ?.value
             .toLowerCase()
             .trim() || "";
-
 
     const filtered =
         conversations
@@ -6202,7 +6133,6 @@ function renderHistory() {
                     new Date(a.updatedAt)
             );
 
-
     filtered.forEach(
         chat => {
 
@@ -6211,10 +6141,8 @@ function renderHistory() {
                     "div"
                 );
 
-
             item.className =
                 "history-item";
-
 
             if (
                 chat.id ===
@@ -6227,41 +6155,33 @@ function renderHistory() {
 
             }
 
-
             const icon =
                 document.createElement(
                     "i"
                 );
 
-
             icon.className =
                 "bi bi-chat-left-text";
-
 
             const title =
                 document.createElement(
                     "div"
                 );
 
-
             title.className =
                 "history-item-title";
-
 
             title.textContent =
                 chat.title ||
                 "New Chat";
-
 
             const actions =
                 document.createElement(
                     "div"
                 );
 
-
             actions.className =
                 "history-actions";
-
 
             const rename =
                 createHistoryAction(
@@ -6271,7 +6191,6 @@ function renderHistory() {
                         renameChat(chat.id)
                 );
 
-
             const deleteButton =
                 createHistoryAction(
                     "bi-trash",
@@ -6280,22 +6199,25 @@ function renderHistory() {
                         deleteChat(chat.id)
                 );
 
-
             actions.appendChild(rename);
-            actions.appendChild(deleteButton);
 
+            actions.appendChild(
+                deleteButton
+            );
 
             item.appendChild(icon);
-            item.appendChild(title);
-            item.appendChild(actions);
 
+            item.appendChild(title);
+
+            item.appendChild(actions);
 
             item.addEventListener(
                 "click",
                 () =>
-                    openConversation(chat.id)
+                    openConversation(
+                        chat.id
+                    )
             );
-
 
             elements.historyList.appendChild(
                 item
@@ -6318,22 +6240,17 @@ function createHistoryAction(
             "button"
         );
 
-
     button.className =
         "history-action";
-
 
     button.type =
         "button";
 
-
     button.title =
         title;
 
-
     button.innerHTML =
         `<i class="bi ${iconName}"></i>`;
-
 
     button.addEventListener(
         "click",
@@ -6345,7 +6262,6 @@ function createHistoryAction(
 
         }
     );
-
 
     return button;
 
@@ -6368,13 +6284,11 @@ function deleteChat(id) {
 
     }
 
-
     conversations =
         conversations.filter(
             chat =>
                 chat.id !== id
         );
-
 
     if (
         currentConversationId === id
@@ -6386,19 +6300,20 @@ function deleteChat(id) {
                 conversations[0].id;
 
         }
-
         else {
 
             createNewChat();
+
             return;
 
         }
 
     }
 
-
     saveHistory();
+
     renderConversation();
+
     renderHistory();
 
 }
@@ -6413,24 +6328,22 @@ function renameChat(id) {
     conversationBeingRenamed =
         id;
 
-
     const chat =
         conversations.find(
             item =>
                 item.id === id
         );
 
-
     if (!chat) {
-        return;
-    }
 
+        return;
+
+    }
 
     const input =
         document.getElementById(
             "renameInput"
         );
-
 
     if (input) {
 
@@ -6439,23 +6352,21 @@ function renameChat(id) {
 
     }
 
-
     const modalElement =
         document.getElementById(
             "renameModal"
         );
 
-
     if (!modalElement) {
-        return;
-    }
 
+        return;
+
+    }
 
     const modal =
         bootstrap.Modal.getOrCreateInstance(
             modalElement
         );
-
 
     modal.show();
 
@@ -6471,43 +6382,38 @@ function saveRename() {
                 conversationBeingRenamed
         );
 
-
     if (!chat) {
-        return;
-    }
 
+        return;
+
+    }
 
     const input =
         document.getElementById(
             "renameInput"
         );
 
-
     const newName =
         input?.value.trim() || "";
-
 
     if (newName) {
 
         chat.title =
             newName;
 
-
         chat.updatedAt =
             new Date().toISOString();
 
     }
 
-
     saveHistory();
-    renderHistory();
 
+    renderHistory();
 
     const modalElement =
         document.getElementById(
             "renameModal"
         );
-
 
     if (modalElement) {
 
@@ -6516,11 +6422,9 @@ function saveRename() {
                 modalElement
             );
 
-
         modal?.hide();
 
     }
-
 
     conversationBeingRenamed =
         null;
@@ -6538,7 +6442,6 @@ function openSidebar() {
         "open"
     );
 
-
     elements.sidebarOverlay?.classList.add(
         "show"
     );
@@ -6551,7 +6454,6 @@ function closeSidebar() {
     elements.historySidebar?.classList.remove(
         "open"
     );
-
 
     elements.sidebarOverlay?.classList.remove(
         "show"
@@ -6571,11 +6473,11 @@ function openAlarm() {
             "alarmModal"
         );
 
-
     if (!modalElement) {
-        return;
-    }
 
+        return;
+
+    }
 
     bootstrap.Modal
         .getOrCreateInstance(
@@ -6593,15 +6495,14 @@ function saveAlarm() {
             "alarmTime"
         );
 
-
     if (!input) {
-        return;
-    }
 
+        return;
+
+    }
 
     const time =
         input.value;
-
 
     if (!time) {
 
@@ -6613,7 +6514,6 @@ function saveAlarm() {
 
     }
 
-
     if (alarmInterval) {
 
         clearInterval(
@@ -6622,7 +6522,6 @@ function saveAlarm() {
 
     }
 
-
     alarmInterval =
         setInterval(
             () => {
@@ -6630,12 +6529,10 @@ function saveAlarm() {
                 const now =
                     new Date();
 
-
                 const current =
                     now
                         .toTimeString()
                         .slice(0, 5);
-
 
                 if (current === time) {
 
@@ -6643,15 +6540,12 @@ function saveAlarm() {
                         alarmInterval
                     );
 
-
                     alarmInterval =
                         null;
-
 
                     setOMAStatus(
                         "Alarm ringing"
                     );
-
 
                     alert(
                         `OMA Alarm: ${time}`
@@ -6663,22 +6557,18 @@ function saveAlarm() {
             1000
         );
 
-
     setOMAStatus(
         `Alarm set for ${time}`
     );
-
 
     alert(
         `Alarm set for ${time}`
     );
 
-
     const modalElement =
         document.getElementById(
             "alarmModal"
         );
-
 
     if (modalElement) {
 
@@ -6702,11 +6592,11 @@ function openTimer() {
             "timerModal"
         );
 
-
     if (!modalElement) {
-        return;
-    }
 
+        return;
+
+    }
 
     bootstrap.Modal
         .getOrCreateInstance(
@@ -6724,12 +6614,10 @@ function saveTimer() {
             "timerMinutes"
         );
 
-
     const secondsInput =
         document.getElementById(
             "timerSeconds"
         );
-
 
     if (
         !minutesInput ||
@@ -6740,18 +6628,15 @@ function saveTimer() {
 
     }
 
-
     const minutes =
         Number(
             minutesInput.value
         );
 
-
     const seconds =
         Number(
             secondsInput.value
         );
-
 
     if (
         minutes < 0 ||
@@ -6767,11 +6652,9 @@ function saveTimer() {
 
     }
 
-
     let totalSeconds =
         minutes * 60 +
         seconds;
-
 
     if (totalSeconds <= 0) {
 
@@ -6783,21 +6666,20 @@ function saveTimer() {
 
     }
 
-
     const modalElement =
         document.getElementById(
             "timerModal"
         );
 
-
     if (modalElement) {
 
         bootstrap.Modal
-            .getInstance(modalElement)
+            .getInstance(
+                modalElement
+            )
             ?.hide();
 
     }
-
 
     if (timerInterval) {
 
@@ -6807,16 +6689,13 @@ function saveTimer() {
 
     }
 
-
     setOMAStatus(
         "Timer running..."
     );
 
-
     updateTimerStatus(
         totalSeconds
     );
-
 
     timerInterval =
         setInterval(
@@ -6824,32 +6703,26 @@ function saveTimer() {
 
                 totalSeconds--;
 
-
                 if (totalSeconds <= 0) {
 
                     clearInterval(
                         timerInterval
                     );
 
-
                     timerInterval =
                         null;
-
 
                     setOMAStatus(
                         "Timer finished"
                     );
 
-
                     alert(
                         "OMA Timer finished!"
                     );
 
-
                     return;
 
                 }
-
 
                 updateTimerStatus(
                     totalSeconds
@@ -6871,10 +6744,8 @@ function updateTimerStatus(
             totalSeconds / 60
         );
 
-
     const seconds =
         totalSeconds % 60;
-
 
     setOMAStatus(
         `Timer: ${minutes}:${String(seconds).padStart(2, "0")}`
@@ -6884,7 +6755,7 @@ function updateTimerStatus(
 
 
 /* =========================================================
-   MICROPHONE / SPEECH RECOGNITION
+   MICROPHONE
    ========================================================= */
 
 function setupMicrophone() {
@@ -6892,7 +6763,6 @@ function setupMicrophone() {
     const SpeechRecognition =
         window.SpeechRecognition ||
         window.webkitSpeechRecognition;
-
 
     if (!SpeechRecognition) {
 
@@ -6911,27 +6781,21 @@ function setupMicrophone() {
 
         }
 
-
         return;
 
     }
 
-
     recognition =
         new SpeechRecognition();
-
 
     recognition.lang =
         "en-US";
 
-
     recognition.continuous =
         false;
 
-
     recognition.interimResults =
         false;
-
 
     recognition.onstart =
         () => {
@@ -6939,16 +6803,13 @@ function setupMicrophone() {
             isListening =
                 true;
 
-
             setOMAStatus(
                 "Listening..."
             );
 
-
             elements.micButton?.classList.add(
                 "listening"
             );
-
 
             if (elements.micButton) {
 
@@ -6959,7 +6820,6 @@ function setupMicrophone() {
 
         };
 
-
     recognition.onresult =
         event => {
 
@@ -6967,12 +6827,10 @@ function setupMicrophone() {
                 event.results[0][0]
                     .transcript;
 
-
             if (elements.messageInput) {
 
                 elements.messageInput.value =
                     transcript;
-
 
                 elements.messageInput.dispatchEvent(
                     new Event("input")
@@ -6980,13 +6838,11 @@ function setupMicrophone() {
 
             }
 
-
             setOMAStatus(
                 "Voice captured"
             );
 
         };
-
 
     recognition.onerror =
         event => {
@@ -6996,13 +6852,11 @@ function setupMicrophone() {
                 event.error
             );
 
-
             setOMAStatus(
                 "Microphone error"
             );
 
         };
-
 
     recognition.onend =
         () => {
@@ -7010,11 +6864,9 @@ function setupMicrophone() {
             isListening =
                 false;
 
-
             elements.micButton?.classList.remove(
                 "listening"
             );
-
 
             if (elements.micButton) {
 
@@ -7024,7 +6876,6 @@ function setupMicrophone() {
             }
 
         };
-
 
     elements.micButton?.addEventListener(
         "click",
@@ -7038,13 +6889,11 @@ function setupMicrophone() {
 
             }
 
-
             try {
 
                 recognition.start();
 
             }
-
             catch (error) {
 
                 console.error(
@@ -7069,15 +6918,14 @@ function autoResizeTextarea() {
     const textarea =
         elements.messageInput;
 
-
     if (!textarea) {
-        return;
-    }
 
+        return;
+
+    }
 
     textarea.style.height =
         "auto";
-
 
     textarea.style.height =
         Math.min(
@@ -7094,67 +6942,45 @@ function autoResizeTextarea() {
 
 function setupEventListeners() {
 
-    /* New chat */
-
     elements.newChatButton?.addEventListener(
         "click",
         createNewChat
     );
-
-
-    /* History search */
 
     elements.historySearch?.addEventListener(
         "input",
         renderHistory
     );
 
-
-    /* Sidebar */
-
     elements.openSidebarButton?.addEventListener(
         "click",
         openSidebar
     );
-
 
     elements.closeSidebarButton?.addEventListener(
         "click",
         closeSidebar
     );
 
-
     elements.sidebarOverlay?.addEventListener(
         "click",
         closeSidebar
     );
-
-
-    /* Rename */
 
     elements.saveRenameButton?.addEventListener(
         "click",
         saveRename
     );
 
-
-    /* Image upload */
-
     elements.imageUpload?.addEventListener(
         "change",
         handleImageUpload
     );
 
-
-    /* Textarea */
-
     elements.messageInput?.addEventListener(
         "input",
         autoResizeTextarea
     );
-
-
-    /* Enter to send */
 
     elements.messageInput?.addEventListener(
         "keydown",
@@ -7174,9 +7000,6 @@ function setupEventListeners() {
         }
     );
 
-
-    /* Send */
-
     elements.sendButton?.addEventListener(
         "click",
         sendMessage
@@ -7195,37 +7018,23 @@ function initializeOMA() {
         "OMA: ABOUT TO START"
     );
 
-
-    /*
-       Theme first.
-       This prevents the page from briefly
-       using the wrong theme.
-    */
-
     initializeTheme();
-
 
     loadHistory();
 
-
     checkBackend();
-
 
     setupMicrophone();
 
-
     setupEventListeners();
-
 
     console.log(
         "======================================"
     );
 
-
     console.log(
         "OMA INITIALIZATION COMPLETE"
     );
-
 
     console.log(
         "======================================"
@@ -7240,9 +7049,8 @@ function initializeOMA() {
 
 initializeOMA();
 
-
-
 </script>
+
 
 </body>
 
