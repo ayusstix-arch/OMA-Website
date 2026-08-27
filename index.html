@@ -2598,7 +2598,7 @@ html.theme-changing *::after {
 <!-- KaTeX math rendering -->
 <link
     rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css"
+    href="Katex folder/katex/katex.min.css"
 >
 
 </head>
@@ -3539,12 +3539,12 @@ html.theme-changing *::after {
 
 <script
     defer
-    src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"
+    src="Katex folder/katex/katex.min.js"
 ></script>
 
 <script
     defer
-    src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js"
+    src="Katex folder/katex/contrib/auto-render.min.js"
 ></script>
 
 <script>
@@ -5043,8 +5043,41 @@ function renderMarkdown(text) {
 
     if (!text) return "";
 
-    const source =
-        String(text);
+    const source = String(text);
+
+    /*
+     * Protect LaTeX before Markdown/Marked processes
+     * the response.
+     *
+     * Marked can interpret/remove backslashes used by
+     * LaTeX delimiters such as \( \) and \[ \].
+     *
+     * We temporarily replace LaTeX blocks with safe
+     * placeholders, let Markdown render normally,
+     * then restore the original LaTeX afterwards.
+     */
+
+    const latexBlocks = [];
+
+    const protectedSource = source.replace(
+        /(\$\$[\s\S]*?\$\$|\\\[[\s\S]*?\\\]|\\\([\s\S]*?\\\))/g,
+        (match) => {
+
+            const index = latexBlocks.length;
+
+            latexBlocks.push(match);
+
+            return `OMA_LATEX_PLACEHOLDER_${index}_END`;
+        }
+    );
+
+
+    let rendered;
+
+
+    /*
+     * Render Markdown.
+     */
 
     if (
         typeof marked !== "undefined" &&
@@ -5053,8 +5086,8 @@ function renderMarkdown(text) {
 
         try {
 
-            return marked.parse(
-                source,
+            rendered = marked.parse(
+                protectedSource,
                 {
                     breaks: true,
                     gfm: true
@@ -5067,16 +5100,49 @@ function renderMarkdown(text) {
                 "OMA: Markdown rendering failed:",
                 error
             );
+
+            rendered = escapeHtml(
+                protectedSource
+            ).replace(
+                /\n/g,
+                "<br>"
+            );
         }
+
+    } else {
+
+        rendered = escapeHtml(
+            protectedSource
+        ).replace(
+            /\n/g,
+            "<br>"
+        );
     }
 
-    return escapeHtml(
-        source
-    ).replace(
-        /\n/g,
-        "<br>"
+
+    /*
+     * Restore the original LaTeX after Markdown
+     * has finished processing.
+     */
+
+    latexBlocks.forEach(
+        (latex, index) => {
+
+            const placeholder =
+                `OMA_LATEX_PLACEHOLDER_${index}_END`;
+
+            rendered = rendered.split(
+                placeholder
+            ).join(
+                latex
+            );
+        }
     );
+
+
+    return rendered;
 }
+
 
 
 /* =========================================================
@@ -5632,12 +5698,17 @@ async function sendMessage() {
                                 "application/json"
                         },
 
-                        body:
-                            JSON.stringify({
+                    body:
+    JSON.stringify({
+        message: text,
 
-                                message:
-                                    text
-                            }),
+        history: buildConversationContext(),
+
+        memoryEnabled:
+            memorySetting
+                ? memorySetting.checked
+                : true
+    }),
 
                         signal:
                             controller.signal
