@@ -1208,86 +1208,79 @@ html[data-theme="light"]
    TABLES
    ========================================================= */
 
+
+/* =========================================================
+   TABLES
+   ========================================================= */
+
 .message-text table {
     width: 100%;
-
-    margin:
-        14px 0;
-
-    border-collapse:
-        collapse;
-
-    border:
-        1px solid var(--oma-border);
-
-    font-size:
-        13px;
-
-    display:
-        block;
-
-    overflow-x:
-        auto;
-
-    white-space:
-        nowrap;
+    margin: 14px 0;
+    border-collapse: collapse;
+    border: none;
+    font-size: 13px;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    background: transparent;
 }
 
+/* Table header */
 .message-text th {
-    padding:
-        9px 12px;
-
-    background:
-        var(--oma-surface-3);
-
-    color:
-        var(--oma-text);
-
-    border:
-        1px solid var(--oma-border);
-
-    font-weight:
-        700;
-
-    text-align:
-        left;
+    padding: 9px 12px;
+    background: transparent;
+    color: #000000;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 1px solid #000000;
+    font-weight: 700;
+    text-align: left;
 }
 
+/* Table cells */
 .message-text td {
-    padding:
-        9px 12px;
-
-    border:
-        1px solid var(--oma-border);
-
-    color:
-        var(--oma-text-secondary);
-
-    vertical-align:
-        top;
+    padding: 9px 12px;
+    background: transparent;
+    color: #000000;
+    border: none;
+    vertical-align: top;
 }
 
+/* Keep columns readable */
 .message-text th,
 .message-text td {
-    min-width:
-        100px;
+    min-width: 100px;
 }
 
-html[data-theme="dark"]
-.message-text tr:nth-child(even) {
-    background:
-        #151515;
+/* Remove alternating-row backgrounds */
+.message-text tr:nth-child(even),
+.message-text tr:nth-child(odd) {
+    background: transparent;
 }
 
-html[data-theme="light"]
-.message-text tr:nth-child(even) {
-    background:
-        #faf7f0;
-}
-
+/* Remove hover background */
 .message-text tr:hover {
-    background:
-        var(--oma-surface-3);
+    background: transparent;
+}
+
+/* Remove the outer/extreme borders */
+.message-text table tr:first-child th {
+    border-top: none;
+}
+
+.message-text table tr:last-child td {
+    border-bottom: none;
+}
+
+.message-text table th:first-child,
+.message-text table td:first-child {
+    border-left: none;
+}
+
+.message-text table th:last-child,
+.message-text table td:last-child {
+    border-right: none;
 }
 
 
@@ -3543,6 +3536,7 @@ html.theme-changing *::after {
 <script src="js/bootstrap.bundle.min.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
 <script
     defer
     src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"
@@ -3674,14 +3668,6 @@ function initializeOMA() {
         applyMobileSafeArea();
 
 
-        /*
-         * IMPORTANT:
-         * Create exactly one new chat when there
-         * is no valid active chat.
-         *
-         * Do not render the welcome screen twice.
-         */
-
         if (!activeChatId) {
 
             const now =
@@ -3719,12 +3705,7 @@ function initializeOMA() {
         }
 
 
-        /*
-         * Render the active chat exactly once.
-         */
-
         renderActiveChat();
-
 
         updateHistoryList();
 
@@ -3751,6 +3732,7 @@ function initializeOMA() {
         );
     }
 }
+
 
 /* =========================================================
    EVENT LISTENERS
@@ -4130,11 +4112,6 @@ function applyMobileSafeArea() {
         safeBottom
     );
 
-    /*
-     * Give the chat area enough room so the
-     * floating composer does not sit directly
-     * underneath mobile browser/navigation UI.
-     */
 
     if (chatArea) {
 
@@ -4232,11 +4209,6 @@ function showQuickActions() {
     quickActions.style.pointerEvents = "auto";
     quickActions.style.position = "relative";
     quickActions.style.zIndex = "5";
-
-    /*
-     * No JavaScript entrance/movement animation.
-     * The welcome screen should appear immediately.
-     */
 }
 
 
@@ -4526,9 +4498,6 @@ function createNewChat(save = true) {
         activeChatId
     );
 
-    /*
-     * Render only once.
-     */
     renderActiveChat();
 
     updateHistoryList();
@@ -4693,10 +4662,6 @@ function renderActiveChat() {
 
     const chat = getActiveChat();
 
-    /*
-     * Empty/new chat = immediate welcome screen.
-     * No JavaScript movement animation.
-     */
 
     if (
         !chat ||
@@ -4709,9 +4674,6 @@ function renderActiveChat() {
         return;
     }
 
-    /*
-     * Existing conversation = hide Quick Actions.
-     */
 
     hideQuickActions();
 
@@ -4750,6 +4712,14 @@ function renderActiveChat() {
         }
     );
 
+
+    /*
+     * Make sure LaTeX inside the entire
+     * restored conversation is rendered.
+     */
+
+    renderAllMath();
+
     scrollChatToBottom();
 }
 
@@ -4761,11 +4731,6 @@ function renderActiveChat() {
 function showWelcome() {
 
     if (!messages) return;
-
-    /*
-     * No entrance/movement animation here.
-     * The welcome screen is rendered immediately.
-     */
 
     messages.innerHTML = `
         <div class="welcome">
@@ -4893,17 +4858,22 @@ function renderMessage(
     `;
 
 
-    const text =
-        document.createElement(
+    
+        const text =document.createElement(
             "div"
         );
 
     text.className =
         "message-text";
 
+
     /*
-     * Render Markdown first.
-     * KaTeX is applied immediately afterwards.
+     * IMPORTANT:
+     *
+     * Markdown is rendered first.
+     * KaTeX is then applied to the generated
+     * HTML. This means LaTeX can work inside
+     * Markdown tables, lists, headings, etc.
      */
 
     text.innerHTML =
@@ -5060,15 +5030,10 @@ function renderMessage(
 
 
     if (scroll) {
-
-        renderMath(
-            text
-        );
-
         scrollChatToBottom();
-    }
-}
 
+    }
+ }
 
 /* =========================================================
    MARKDOWN
@@ -5118,15 +5083,39 @@ function renderMarkdown(text) {
    KATEX / LATEX RENDERING
    ========================================================= */
 
+/*
+ * KaTeX is loaded using "defer", so it may not
+ * be available at the exact moment OMA first
+ * renders a message.
+ *
+ * This flag prevents multiple retry timers
+ * from being created at the same time.
+ */
+
+let omaMathRenderQueued = false;
+
+
+/*
+ * Render LaTeX inside one message element.
+ *
+ * Supported:
+ *
+ * Inline:
+ * \(x^2 + 1\)
+ * $x^2 + 1$
+ *
+ * Display:
+ * \[x^2 + 1\]
+ * $$x^2 + 1$$
+ */
+
 function renderMath(element) {
 
     if (!element) return;
 
+
     /*
-     * KaTeX auto-render must be loaded in the HTML:
-     *
-     * katex.min.js
-     * auto-render.min.js
+     * KaTeX may still be loading.
      */
 
     if (
@@ -5134,22 +5123,158 @@ function renderMath(element) {
         "function"
     ) {
 
-        /*
-         * Do not destroy the message if KaTeX
-         * has not loaded.
-         */
+        if (!omaMathRenderQueued) {
 
-        console.warn(
-            "OMA: KaTeX auto-render is not loaded."
-        );
+            omaMathRenderQueued = true;
+
+
+            setTimeout(
+                () => {
+
+                    omaMathRenderQueued =
+                        false;
+
+                    renderMath(
+                        element
+                    );
+
+                },
+                100
+            );
+        }
+
 
         return;
     }
+
 
     try {
 
         renderMathInElement(
             element,
+            {
+
+                delimiters: [
+
+                    /*
+                     * Display math
+                     */
+
+                    {
+                        left: "$$",
+                        right: "$$",
+                        display: true
+                    },
+
+                    {
+                        left: "\\[",
+                        right: "\\]",
+                        display: true
+                    },
+
+
+                    /*
+                     * Inline math
+                     */
+
+                    {
+                        left: "\\(",
+                        right: "\\)",
+                        display: false
+                    },
+
+                    {
+                        left: "$",
+                        right: "$",
+                        display: false
+                    }
+                ],
+
+
+                /*
+                 * Invalid LaTeX should not
+                 * destroy the entire message.
+                 */
+
+                throwOnError: false,
+
+
+                /*
+                 * Relaxed parsing for normal
+                 * Markdown content.
+                 */
+
+                strict: false,
+
+
+                /*
+                 * Keep dangerous KaTeX
+                 * commands disabled.
+                 */
+
+                trust: false,
+
+
+                /*
+                 * Generate HTML and MathML.
+                 */
+
+                output: "htmlAndMathml"
+            }
+        );
+
+
+    } catch (error) {
+
+        console.warn(
+            "OMA: KaTeX rendering failed:",
+            error
+        );
+    }
+}
+
+
+/*
+ * Render LaTeX throughout the entire
+ * conversation.
+ *
+ * This is especially useful for:
+ *
+ * - Markdown tables
+ * - Lists
+ * - Blockquotes
+ * - Dynamically inserted messages
+ * - Restored chat history
+ */
+
+function renderAllMath() {
+
+    if (!messages) return;
+
+
+    /*
+     * If KaTeX has not loaded yet,
+     * try again shortly.
+     */
+
+    if (
+        typeof renderMathInElement !==
+        "function"
+    ) {
+
+        setTimeout(
+            renderAllMath,
+            100
+        );
+
+        return;
+    }
+
+
+    try {
+
+        renderMathInElement(
+            messages,
             {
 
                 delimiters: [
@@ -5192,11 +5317,32 @@ function renderMath(element) {
     } catch (error) {
 
         console.warn(
-            "OMA: KaTeX rendering failed:",
+            "OMA: Global KaTeX rendering failed:",
             error
         );
     }
 }
+
+
+/*
+ * Once all deferred scripts have finished loading,
+ * render any messages that may already exist.
+ */
+
+window.addEventListener(
+    "load",
+    () => {
+
+        setTimeout(
+            () => {
+
+                renderAllMath();
+
+            },
+            50
+        );
+    }
+);
 
 
 /* =========================================================
@@ -7692,7 +7838,7 @@ function formatDateGroup(
 
 
     return date.toLocaleDateString(
-        [],
+        [], 
         {
 
             month:
@@ -8200,6 +8346,7 @@ window.addEventListener(
    ========================================================= */
 
 updateSendButton();
+
 
 </script>
 </body>
